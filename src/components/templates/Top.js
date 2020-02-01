@@ -15,7 +15,7 @@ class Top extends React.Component {
         return (
             <div>
                 <p class="title">AnoChat</p>
-                <p class="discription">世界一気楽なチャットをはじめよう</p>
+                <p class="discription">　世界一気楽なチャットをはじめよう</p>
                 <Button id="start-btn" variant="contained" color="primary" onClick={this.handleToTopicList}>Get Started</Button>
             </div>
         )
