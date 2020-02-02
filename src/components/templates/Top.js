@@ -10,6 +10,10 @@ class Top extends React.Component {
         this.props.history.push('/topic')
     }
 
+    handleToTopicDetail = () => {
+        this.props.history.push('/topic/1')
+    }
+
 
     render() {
         return (
@@ -17,6 +21,7 @@ class Top extends React.Component {
                 <p class="title">AnoChat</p>
                 <p class="discription">　世界一気楽なチャットをはじめよう</p>
                 <Button id="start-btn" variant="contained" color="primary" onClick={this.handleToTopicList}>Get Started</Button>
+                <Button id="start-btn" variant="contained" color="danger" onClick={this.handleToTopicDetail}>Test to TopicDetail</Button>
             </div>
         )
     }
