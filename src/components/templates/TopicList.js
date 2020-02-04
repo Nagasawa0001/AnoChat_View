@@ -7,15 +7,13 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { fade } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -29,9 +27,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Divider from '@material-ui/core/Divider';
 import SpeakerNotesSharpIcon from '@material-ui/icons/SpeakerNotesSharp';
+import { withStyles } from '@material-ui/core/styles';
 
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
     root: {
         width: '100%',
         maxWidth: 250,
@@ -117,246 +116,166 @@ const useStyles = makeStyles(theme => ({
     main: {
         display: 'flex',
     }
-}));
-
-function TopicList() {
-    const classes = useStyles();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+});
 
 
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-    const handleProfileMenuOpen = event => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        handleMobileMenuClose();
-    };
-
-    const handleMobileMenuOpen = event => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
-
-    const menuId = 'primary-search-account-menu';
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-        </Menu>
-    );
-
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-    const renderMobileMenu = (
-        <Menu
-            anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            id={mobileMenuId}
-            keepMounted
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            open={isMobileMenuOpen}
-            onClose={handleMobileMenuClose}
-        >
-            <MenuItem>
-                <IconButton aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="secondary">
-                        <MailIcon />
-                    </Badge>
-                </IconButton>
-                <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
-                <IconButton aria-label="show 11 new notifications" color="inherit">
-                    <Badge badgeContent={11} color="secondary">
-                        <NotificationsIcon />
-                    </Badge>
-                </IconButton>
-                <p>Notifications</p>
-            </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle />
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
-        </Menu>
-    );
-
-    return (
-        <div>
-            <div className={classes.grow}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            className={classes.menuButton}
-                            color="inherit"
-                            aria-label="open drawer"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography className={classes.title} variant="h6" noWrap>
-                            トピック
+class TopicList extends React.Component {
+    render() {
+        const { classes } = this.props;
+        return (
+            <div>
+                <div className={classes.grow}>
+                    <AppBar position="static">
+                        <Toolbar>
+                            <IconButton
+                                edge="start"
+                                className={classes.menuButton}
+                                color="inherit"
+                                aria-label="open drawer"
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Typography className={classes.title} variant="h6" noWrap>
+                                トピック
           </Typography>
-                        <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon />
+                                </div>
+                                <InputBase
+                                    placeholder="トピック名で検索..."
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                />
                             </div>
-                            <InputBase
-                                placeholder="トピック名で検索..."
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </div>
-                        <div className={classes.grow} />
-                        <div className={classes.sectionDesktop}>
-                            <IconButton aria-label="show 4 new mails" color="inherit">
-                                <Badge badgeContent={4} color="secondary">
-                                    <MailIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton aria-label="show 17 new notifications" color="inherit">
-                                <Badge badgeContent={17} color="secondary">
-                                    <NotificationsIcon />
-                                </Badge>
-                            </IconButton>
-                            <IconButton
-                                edge="end"
-                                aria-label="account of current user"
-                                aria-controls={menuId}
-                                aria-haspopup="true"
-                                onClick={handleProfileMenuOpen}
-                                color="inherit"
-                            >
-                                <AccountCircle />
-                            </IconButton>
-                        </div>
-                        <div className={classes.sectionMobile}>
-                            <IconButton
-                                aria-label="show more"
-                                aria-controls={mobileMenuId}
-                                aria-haspopup="true"
-                                onClick={handleMobileMenuOpen}
-                                color="inherit"
-                            >
-                                <MoreIcon />
-                            </IconButton>
-                        </div>
-                    </Toolbar>
-                </AppBar>
-                {renderMobileMenu}
-                {renderMenu}
-            </div>
-            <div className={classes.main}>
-                <div className={classes.root}>
-                    <List component="nav" aria-label="main mailbox folders">
-                    <ListItem>
-                            <ListItemIcon>
-                            <ListItemText primary="● カテゴリ" />
-                            </ListItemIcon>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <InboxIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Inbox" />
-                        </ListItem>
-                        <Divider light />
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DraftsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Drafts" />
-                        </ListItem>
-                        <Divider light />
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DraftsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Trash" />
-                        </ListItem>
-                        <Divider light />
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DraftsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Spam" />
-                        </ListItem>
-                        <Divider light />
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DraftsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Spam" />
-                        </ListItem>
-                        <Divider light />
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DraftsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Spam" />
-                        </ListItem>
-                        <Divider light />
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DraftsIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Spam" />
-                        </ListItem>
-                    </List>
+                            <div className={classes.grow} />
+                            <div className={classes.sectionDesktop}>
+                                <IconButton aria-label="show 4 new mails" color="inherit">
+                                    <Badge badgeContent={4} color="secondary">
+                                        <MailIcon />
+                                    </Badge>
+                                </IconButton>
+                                <IconButton aria-label="show 17 new notifications" color="inherit">
+                                    <Badge badgeContent={17} color="secondary">
+                                        <NotificationsIcon />
+                                    </Badge>
+                                </IconButton>
+                                <IconButton
+                                    edge="end"
+                                    aria-label="account of current user"
+                                    aria-controls=""
+                                    aria-haspopup="true"
+                                    onClick=""
+                                    color="inherit"
+                                >
+                                    <AccountCircle />
+                                </IconButton>
+                            </div>
+                            <div className={classes.sectionMobile}>
+                                <IconButton
+                                    aria-label="show more"
+                                    aria-controls=""
+                                    aria-haspopup="true"
+                                    onClick=""
+                                    color="inherit"
+                                >
+                                    <MoreIcon />
+                                </IconButton>
+                            </div>
+                        </Toolbar>
+                    </AppBar>
                 </div>
-                <div className={classes.cardList}>
-                    <Card className={classes.card}>
-                        <CardActionArea>
-                            <CardContent>
-                                <Typography gutterBottom variant="h6" component="h2" >
-                                    タイトルタイトルタイトルタイトルタイトル
+                <div className={classes.main}>
+                    <div className={classes.root}>
+                        <List component="nav" aria-label="main mailbox folders">
+                            <ListItem>
+                                <ListItemIcon>
+                                    <ListItemText primary="● カテゴリ" />
+                                </ListItemIcon>
+                            </ListItem>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <InboxIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Inbox" />
+                            </ListItem>
+                            <Divider light />
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <DraftsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Drafts" />
+                            </ListItem>
+                            <Divider light />
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <DraftsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Trash" />
+                            </ListItem>
+                            <Divider light />
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <DraftsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Spam" />
+                            </ListItem>
+                            <Divider light />
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <DraftsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Spam" />
+                            </ListItem>
+                            <Divider light />
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <DraftsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Spam" />
+                            </ListItem>
+                            <Divider light />
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <DraftsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Spam" />
+                            </ListItem>
+                        </List>
+                    </div>
+                    <div className={classes.cardList}>
+                        <Card className={classes.card}>
+                            <CardActionArea>
+                                <CardContent>
+                                    <Typography gutterBottom variant="h6" component="h2" >
+                                        タイトルタイトルタイトルタイトルタイトル
                                 </Typography>
-                            </CardContent>
-                            <CardMedia
-                                className={classes.media}
-                                image="/images/top-img01.png"
-                                title="Contemplative Reptile"
-                            />
-                        </CardActionArea>
-                        <CardActions>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                        作成日:2019/12/01
+                                </CardContent>
+                                <CardMedia
+                                    className={classes.media}
+                                    image="/images/top-img01.png"
+                                    title="Contemplative Reptile"
+                                />
+                            </CardActionArea>
+                            <CardActions>
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                    作成日:2019/12/01
                             </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                            <SpeakerNotesSharpIcon fontSize="small"/>
-                            120
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                    <SpeakerNotesSharpIcon fontSize="small" />
+                                    120
                             </Typography>
-                            
-                        </CardActions>
-                    </Card>
+
+                            </CardActions>
+                        </Card>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
 
-export default withRouter(TopicList)
+export default withStyles(styles)(withRouter(TopicList));

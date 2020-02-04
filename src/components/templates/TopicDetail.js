@@ -8,7 +8,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
-import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import ReplyAllIcon from '@material-ui/icons/ReplyAll';
@@ -22,8 +21,10 @@ import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SendIcon from '@material-ui/icons/Send';
 import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
+
+const styles = theme => ({
     root: {
         float: "right",
         width: '100%',
@@ -45,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     media: {
         height: 150,
         width: 200,
-        magin:10,
+        magin: 10,
         border: "solid",
     },
     contentMedia: {
@@ -61,11 +62,11 @@ const useStyles = makeStyles(theme => ({
         width: 800,
         maxHeight: 600,
         flex: 1,
-      },
-      iconButton: {
+    },
+    iconButton: {
         padding: 10,
-      },
-      paper: {
+    },
+    paper: {
         padding: '2px 4px',
         display: 'flex',
         alignItems: 'center',
@@ -73,44 +74,45 @@ const useStyles = makeStyles(theme => ({
         border: "solid",
         borderColor: "#c0c0c0",
         height: 40,
-      },
-}));
+    },
+});
 
-function TopicDetail() {
-    const classes = useStyles();
-    return (
-        <div>
-                    <Card className={classes.card}>
-                            <CardContent>
-                                <Typography gutterBottom variant="h6" component="h2" >
-                                    タイトルタイトルタイトルタイトルタイトル
+class TopicDetail extends React.Component {
+    render() {
+        const { classes } = this.props;
+        return (
+            <div>
+                <Card className={classes.card}>
+                    <CardContent>
+                        <Typography gutterBottom variant="h6" component="h2" >
+                            タイトルタイトルタイトルタイトルタイトル
                                 </Typography>
-                            </CardContent>
-                            <div className={classes.contentMedia}>
-                            <CardMedia
-                                className={classes.media}
-                                image="/images/top-img01.png"
-                                title="Contemplative Reptile"
-                            />
-                            <span className={classes.topicContent}>[本文記載]</span>
-                            </div>
-                        <CardActions>
+                    </CardContent>
+                    <div className={classes.contentMedia}>
+                        <CardMedia
+                            className={classes.media}
+                            image="/images/top-img01.png"
+                            title="Contemplative Reptile"
+                        />
+                        <span className={classes.topicContent}>[本文記載]</span>
+                    </div>
+                    <CardActions>
                         <Typography variant="body2" color="textSecondary" component="p">
-                        作成日:2019/12/01
+                            作成日:2019/12/01
                             </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                            <SpeakerNotesSharpIcon fontSize="small"/>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            <SpeakerNotesSharpIcon fontSize="small" />
                             120
                             </Typography>
-                            
-                        </CardActions>
-                    </Card>
-        <div className={classes.root}>
+
+                    </CardActions>
+                </Card>
+                <div className={classes.root}>
                     <List component="nav" aria-label="main mailbox folders">
-                    <ListItem>
+                        <ListItem>
                             <ListItemIcon>
-                            <TrendingUpIcon className={classes.icon}/>
-                            <ListItemText primary="急上昇" />
+                                <TrendingUpIcon className={classes.icon} />
+                                <ListItemText primary="急上昇" />
                             </ListItemIcon>
                         </ListItem>
                         <Divider light />
@@ -164,40 +166,41 @@ function TopicDetail() {
                         </ListItem>
                     </List>
                 </div>
-        <div id="chat-frame">
-            <span>2019/12/01</span>
-            <ReplyAllIcon />50件
+                <div id="chat-frame">
+                    <span>2019/12/01</span>
+                    <ReplyAllIcon />50件
             <p class="chat-talk">
-                <span class="talk-icon">
-                <div class="talk-icon">11</div>
-                <AccountCircleIcon fontSize="large" />
-                </span>
-                <span class="talk-content">[トーク内容を記載]</span>
-            </p>
-            <div>
-                <span>2019/12/01</span>
-                <ReplyAllIcon />50件
+                        <span class="talk-icon">
+                            <div class="talk-icon">11</div>
+                            <AccountCircleIcon fontSize="large" />
+                        </span>
+                        <span class="talk-content">[トーク内容を記載]</span>
+                    </p>
+                    <div>
+                        <span>2019/12/01</span>
+                        <ReplyAllIcon />50件
             <p class="chat-talk mytalk">
-                <span class="talk-icon">
-                <div class="talk-icon">12</div>
-                <AccountCircleIcon fontSize="large" />
-                </span>
-                <span class="talk-content">[トーク内容を記載]</span>
-            </p>
+                            <span class="talk-icon">
+                                <div class="talk-icon">12</div>
+                                <AccountCircleIcon fontSize="large" />
+                            </span>
+                            <span class="talk-content">[トーク内容を記載]</span>
+                        </p>
+                    </div>
+                    <Paper component="form" className={classes.paper}>
+                        <InputBase
+                            className={classes.input}
+                            placeholder="Search Google Maps"
+                            inputProps={{ 'aria-label': 'search google maps' }}
+                        />
+                        <IconButton type="submit" className={classes.iconButton} aria-label="search">
+                            <SendIcon fontSize="large" />
+                        </IconButton>
+                    </Paper>
+                </div>
             </div>
-            <Paper component="form" className={classes.paper}>
-            <InputBase
-        className={classes.input}
-        placeholder="Search Google Maps"
-        inputProps={{ 'aria-label': 'search google maps' }}
-      />
-      <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SendIcon fontSize="large" />
-      </IconButton>
-      </Paper>
-        </div>
-        </div>
-    )
+        );
+    }
 }
 
-export default withRouter(TopicDetail)
+export default withStyles(styles)(withRouter(TopicDetail));
