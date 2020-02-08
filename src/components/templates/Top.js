@@ -2,29 +2,36 @@ import React from 'react';
 import { withRouter} from 'react-router';
 import Button from '@material-ui/core/Button';
 import '../../assets/Top.css';
+import { connect } from 'react-redux';
+import { fetchTopicList } from '../../modules/Top';
 
 
 class Top extends React.Component {
-
-    handleToTopicList = () => {
-        this.props.history.push('/topic')
-    }
-
-    handleToTopicDetail = () => {
-        this.props.history.push('/topic/1')
-    }
-
-
     render() {
         return (
             <div>
-                <p class="title">AnoChat</p>
-                <p class="discription">　世界一気楽なチャットをはじめよう</p>
-                <Button id="start-btn" variant="contained" color="primary" onClick={this.handleToTopicList}>Get Started</Button>
-                <Button id="start-btn" variant="contained" color="danger" onClick={this.handleToTopicDetail}>Test to TopicDetail</Button>
+                <p className="title">AnoChat</p>
+                <p className="discription">　世界一気楽なチャットをはじめよう</p>
+                <Button className="start-btn" variant="contained" color="primary" onClick={this.props.fetchTopicList}>Get Started</Button>
+                <Button className="start-btn" onClick={this.aaaa} variant="contained" color="default" >Test to TopicDetail</Button>
+                {this.props.topics}
             </div>
         )
     }
 }
 
-export default withRouter(Top)
+function mapStateToProps({ topics }) {
+    return {
+        topics
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        fetchTopicList() {
+            dispatch(fetchTopicList());
+        }
+    }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Top));

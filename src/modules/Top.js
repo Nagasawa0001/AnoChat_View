@@ -9,28 +9,29 @@ const GET_TOPIC_DETAIL = 'GET_TOPIC_DETAIL';
 
 
 // Action Creator
-export function GetTopicList() {
+
+export function fetchTopicList() {
     return {
         type: 'GET_TOPIC_LIST',
         topics: []
     }
 }
 
-export function SearchTopicByName() {
+export function fetchTopicByName() {
     return {
         type: 'SEARCH_TOPIC_NAME',
         topics: []
     }
 }
 
-export function SearchTopicByTag() {
+export function fetchTopicByTag() {
     return {
         type: 'SEARCH_TOPIC_NAME',
         topics: []
     }
 }
 
-export function GetTopicDetail() {
+export function fetchTopicDetail() {
     return {
         type: 'GET_TOPIC_DETAIL',
         topic: {}
@@ -44,7 +45,7 @@ const initialState = {
     topic: {}
 }
 
-export function TopicState(state = initialState, action) {
+export function TopicReducer(state = initialState, action) {
     switch (action.type) {
         case GET_TOPIC_LIST:
             state.type = action.type
@@ -65,23 +66,27 @@ export function TopicState(state = initialState, action) {
             state.type = action.type
             state.topic = action.topic
             return Object.assign({}, state) 
+
+        default:
+         return Object.assign({}, state);
     }
 }
 
 // Middleware
-const requestTopic = () => axios.get('http://localhost:3000/topic')
+const requestFetchTopic = () => axios.get('http://localhost:3000/topic')
     .then((res) => {
         const topics = res.data
         console.log(topics)
         return { topics }
     })
     .catch((error) => {
+        console.log(error)
         return { error }
     })
 
-function* FetchTopicList() {
+function* topicList() {
 
-    const { topics, error } = yield call(requestTopic);
+    const { topics, error } = yield call(requestFetchTopic);
     console.log(topics)
 
     if (topics) {
@@ -91,4 +96,4 @@ function* FetchTopicList() {
     }
 }
 
-export default [takeEvery('GET_TOPIC_LIST', FetchTopicList)];
+export default [takeEvery('GET_TOPIC_LIST', topicList)];
