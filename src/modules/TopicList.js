@@ -63,6 +63,7 @@ function* getTopicList(context, action) {
     } else {
         console.log(error);
         yield put({ type: TOPICLIST_GET_FAILURE, error: '予期せぬエラーが発生しました。開発者に連絡してください' });
+        yield call(context.history.push, meta.pageOnTop)
 
     }
 }

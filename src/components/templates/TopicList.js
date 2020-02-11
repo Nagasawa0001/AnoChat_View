@@ -134,7 +134,8 @@ class TopicList extends React.Component {
 
     componentDidMount() {
         const meta = {
-            pageOnTopicList: '/topic'
+            pageOnTopicList: '/topic',
+            pageOnTop: '/'
         }
         this.props.fetchTopicList(meta);
     }
@@ -237,7 +238,8 @@ class TopicList extends React.Component {
                     <div className={classes.cardList}>
                         {
                             topics.map(function (topic, i) {
-
+                                const moment = require('moment')
+                                const createdAt = moment(topic.created_at).format('YYYY/MM/DD hh:mm');
                                 return (
                                     <Card className={classes.card} key={i}>
                                         <CardActionArea>
@@ -254,12 +256,12 @@ class TopicList extends React.Component {
                                         </CardActionArea>
                                         <CardActions>
                                             <Typography variant="body2" color="textSecondary" component="p">
-                                                作成日:2019/12/01
-                            </Typography>
+                                                作成日:{createdAt}
+                                            </Typography>
                                             <Typography variant="body2" color="textSecondary" component="p">
                                                 <SpeakerNotesSharpIcon fontSize="small" />
                                                 120
-                            </Typography>
+                                            </Typography>
                                         </CardActions>
                                     </Card>
                                 );
