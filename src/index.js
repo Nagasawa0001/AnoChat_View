@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import { TopicReducer, sagas, initialState } from './modules/Top';
+import { topicListReducer, topicListSagas, initialState } from './modules/TopicList';
 import { createStore, applyMiddleware } from 'redux';
 import { all } from 'redux-saga/effects';
 import createSagaMiddleware from 'redux-saga'
@@ -14,13 +14,13 @@ import TopicDetail from './components/templates/TopicDetail';
 import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
 
-const allSagas = [...sagas,];
+const allSagas = [...topicListSagas,];
 
 function* rootSaga(context) {
     yield all(allSagas.map(f => f(context)));
 }
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(TopicReducer, initialState, applyMiddleware(sagaMiddleware, createLogger()));
+const store = createStore(topicListReducer, initialState, applyMiddleware(sagaMiddleware, createLogger()));
 
 const history = createHistory();
 

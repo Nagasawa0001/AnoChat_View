@@ -3,34 +3,32 @@ import { withRouter } from 'react-router';
 import Button from '@material-ui/core/Button';
 import '../../assets/Top.css';
 import { connect } from 'react-redux';
-import { fetchTopicList } from '../../modules/Top';
+import { fetchTopicList } from '../../modules/TopicList';
 
 
 class Top extends React.Component {
 
 
     handleToTopicList = () => {
-        const meta = {
-            pageOnTopicList: '/topic'
-        }
-        this.props.fetchTopicList(meta);
+        this.props.history.push('/topic');
     }
 
     render() {
         return (
             <div>
+                
                 <p className="title">AnoChat</p>
-                <p className="discription">　世界一気楽なチャットをはじめよう</p>
+                <p className="discription">　みんなと楽しいチャットをはじめよう</p>
                 <Button className="start-btn" variant="contained" color="primary" onClick={this.handleToTopicList}>Get Started</Button>
-                <Button className="start-btn" variant="contained" color="default" >Test to TopicDetail</Button>
+                <h3>{this.props.error}</h3>
             </div>
         )
     }
 }
 
-function mapStateToProps({ topics }) {
+function mapStateToProps({ error }) {
     return {
-        topics
+        error
     }
 }
 

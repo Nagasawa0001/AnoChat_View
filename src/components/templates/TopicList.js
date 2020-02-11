@@ -6,7 +6,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
 import { fade } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -28,6 +27,15 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Divider from '@material-ui/core/Divider';
 import SpeakerNotesSharpIcon from '@material-ui/icons/SpeakerNotesSharp';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import { fetchTopicList } from '../../modules/TopicList';
+
+export const categoryTags = [
+    { id: 1, name: 'ニュース' },
+    { id: 2, name: '漫画・アニメ・ゲーム' },
+    { id: 3, name: '雑談' }
+]
+
 
 
 const styles = theme => ({
@@ -115,13 +123,25 @@ const styles = theme => ({
     },
     main: {
         display: 'flex',
+    },
+    topicTitle: {
+        fontWeight: "bold",
     }
 });
 
 
 class TopicList extends React.Component {
+
+    componentDidMount() {
+        const meta = {
+            pageOnTopicList: '/topic'
+        }
+        this.props.fetchTopicList(meta);
+    }
+
     render() {
         const { classes } = this.props;
+        const topics = this.props.topics;
         return (
             <div>
                 <div className={classes.grow}>
@@ -137,7 +157,7 @@ class TopicList extends React.Component {
                             </IconButton>
                             <Typography className={classes.title} variant="h6" noWrap>
                                 トピック
-          </Typography>
+                            </Typography>
                             <div className={classes.search}>
                                 <div className={classes.searchIcon}>
                                     <SearchIcon />
@@ -196,81 +216,57 @@ class TopicList extends React.Component {
                                     <ListItemText primary="● カテゴリ" />
                                 </ListItemIcon>
                             </ListItem>
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <InboxIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Inbox" />
-                            </ListItem>
-                            <Divider light />
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <DraftsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Drafts" />
-                            </ListItem>
-                            <Divider light />
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <DraftsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Trash" />
-                            </ListItem>
-                            <Divider light />
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <DraftsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Spam" />
-                            </ListItem>
-                            <Divider light />
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <DraftsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Spam" />
-                            </ListItem>
-                            <Divider light />
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <DraftsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Spam" />
-                            </ListItem>
-                            <Divider light />
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <DraftsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Spam" />
-                            </ListItem>
+                            {
+                                categoryTags.map(function (categoryTag, i) {
+                                    return (
+                                        <div>
+                                            <ListItem button>
+                                                <ListItemIcon>
+                                                    <InboxIcon />
+                                                </ListItemIcon>
+                                                <ListItemText key={i} primary={categoryTag.name} />
+                                            </ListItem>
+                                            <Divider light />
+                                        </div>
+                                    );
+                                })
+
+                            }
                         </List>
                     </div>
                     <div className={classes.cardList}>
-                        <Card className={classes.card}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h6" component="h2" >
-                                        タイトルタイトルタイトルタイトルタイトル
-                                </Typography>
-                                </CardContent>
-                                <CardMedia
-                                    className={classes.media}
-                                    image="/images/top-img01.png"
-                                    title="Contemplative Reptile"
-                                />
-                            </CardActionArea>
-                            <CardActions>
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                    作成日:2019/12/01
-                            </Typography>
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                    <SpeakerNotesSharpIcon fontSize="small" />
-                                    120
-                            </Typography>
+                        {
+                            topics.map(function (topic, i) {
 
-                            </CardActions>
-                        </Card>
+                                return (
+                                    <Card className={classes.card} key={i}>
+                                        <CardActionArea>
+                                            <CardContent>
+                                                <Typography className={classes.topicTitle} gutterBottom variant="h6" component="h2" >
+                                                    {topic.title}
+                                                </Typography>
+                                            </CardContent>
+                                            <CardMedia
+                                                className={classes.media}
+                                                image="/images/top-img01.png"
+                                                title="Contemplative Reptile"
+                                            />
+                                        </CardActionArea>
+                                        <CardActions>
+                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                作成日:2019/12/01
+                            </Typography>
+                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                <SpeakerNotesSharpIcon fontSize="small" />
+                                                120
+                            </Typography>
+                                        </CardActions>
+                                    </Card>
+                                );
+                            })
+
+                        }
+
                     </div>
                 </div>
             </div>
@@ -278,4 +274,20 @@ class TopicList extends React.Component {
     }
 }
 
-export default withStyles(styles)(withRouter(TopicList));
+function mapStateToProps(store) {
+    console.log(store.topics);
+    return {
+        topics: store.topics,
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        fetchTopicList(meta) {
+            dispatch(fetchTopicList(meta));
+        }
+    }
+}
+
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(TopicList)));
