@@ -10,7 +10,7 @@ class Top extends React.Component {
 
 
     handleToTopicList = () => {
-        this.props.history.push('/topic');
+        this.props.history.push('/project');
     }
 
     render() {
@@ -19,7 +19,7 @@ class Top extends React.Component {
                 
                 <h1 className="title">CoopLab</h1>
                 <p className="discription">Easy Co-op Development</p>
-                <Button className="start-btn" variant="contained" color="primary" onClick={this.handleToTopicList}>Get Started</Button>
+                <Button className="start-btn" variant="contained" onClick={this.handleToTopicList}>Get Started</Button>
                 <h3>{this.props.error}</h3>
             </div>
         )

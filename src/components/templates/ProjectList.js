@@ -123,25 +123,25 @@ const styles = theme => ({
     main: {
         display: 'flex',
     },
-    topicTitle: {
+    projectTitle: {
         fontWeight: "bold",
     }
 });
 
 
-class TopicList extends React.Component {
+class projectList extends React.Component {
 
     componentDidMount() {
         const meta = {
-            pageOnTopicList: '/topic',
-            pageOnTop: '/'
+            success: '/project',
+            failure: '/'
         }
         this.props.getProjectListAction(meta);
     }
 
     render() {
         const { classes } = this.props;
-        const topics = this.props.topics;
+        const projects = this.props.projects;
         return (
             <div>
                 <div className={classes.grow}>
@@ -236,15 +236,15 @@ class TopicList extends React.Component {
                     </div>
                     <div className={classes.cardList}>
                         {
-                            topics.map(function (topic, i) {
+                            projects.map(function (project, i) {
                                 const moment = require('moment')
-                                const createdAt = moment(topic.created_at).format('YYYY/MM/DD hh:mm');
+                                const createdAt = moment(project.created_at).format('YYYY/MM/DD hh:mm');
                                 return (
                                     <Card className={classes.card} key={i}>
                                         <CardActionArea>
                                             <CardContent>
-                                                <Typography className={classes.topicTitle} gutterBottom variant="h6" component="h2" >
-                                                    {topic.title}
+                                                <Typography className={classes.projectTitle} gutterBottom variant="h6" component="h2" >
+                                                    {project.title}
                                                 </Typography>
                                             </CardContent>
                                             <CardMedia
@@ -276,9 +276,9 @@ class TopicList extends React.Component {
 }
 
 function mapStateToProps(store) {
-    console.log(store.topics);
+    console.log(store.projects);
     return {
-        topics: store.topics,
+        projects: store.projects,
     }
 }
 
@@ -291,4 +291,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(TopicList)));
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(projectList)));
