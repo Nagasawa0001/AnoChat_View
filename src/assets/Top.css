@@ -1,17 +1,17 @@
 body {
     text-align: center;
     padding: 30px;
-    background-image: url(../background.jpg)
+    background:#f5deb3;
 }
 
 .title {
-    font-size: 100px;
+    font-size: 150px;
     font-weight: bold;
     color: white;
 }
 
 .discription {
-    font-size: 20px;
+    font-size: 60px;
     color: white;
     font-weight: bold;
 }
@@ -19,8 +19,6 @@ body {
 .start-btn {
     height: 50px;
     width: 200px;
-    font-size: 20px;
-    font-weight: bold;
 }
 
 h3 {

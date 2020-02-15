@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import '../../assets/TopicList.css';
+import '../../assets/ProjectList.css';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -28,12 +28,11 @@ import Divider from '@material-ui/core/Divider';
 import SpeakerNotesSharpIcon from '@material-ui/icons/SpeakerNotesSharp';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { fetchTopicList } from '../../modules/TopicList';
+import { getProjectListAction } from '../../modules/ProjectList';
 
 export const categoryTags = [
     { id: 1, name: 'ニュース' },
-    { id: 2, name: '漫画・アニメ・ゲーム' },
-    { id: 3, name: '雑談' }
+    { id: 2, name: '雑談' }
 ]
 
 
@@ -137,7 +136,7 @@ class TopicList extends React.Component {
             pageOnTopicList: '/topic',
             pageOnTop: '/'
         }
-        this.props.fetchTopicList(meta);
+        this.props.getProjectListAction(meta);
     }
 
     render() {
@@ -285,8 +284,8 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        fetchTopicList(meta) {
-            dispatch(fetchTopicList(meta));
+        getProjectListAction(meta) {
+            dispatch(getProjectListAction(meta));
         }
     }
 }

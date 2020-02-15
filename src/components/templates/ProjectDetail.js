@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import '../../assets/TopicDetail.css';
+import '../../assets/ProjectDetail.css';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import Button from '@material-ui/core/Button';
 import '../../assets/Top.css';
 import { connect } from 'react-redux';
-import { fetchTopicList } from '../../modules/TopicList';
+import { getProjectListAction } from '../../modules/ProjectList';
 
 
 class Top extends React.Component {
@@ -17,8 +17,8 @@ class Top extends React.Component {
         return (
             <div>
                 
-                <p className="title">AnoChat</p>
-                <p className="discription">　みんなと楽しいチャットをはじめよう</p>
+                <h1 className="title">CoopLab</h1>
+                <p className="discription">Easy Co-op Development</p>
                 <Button className="start-btn" variant="contained" color="primary" onClick={this.handleToTopicList}>Get Started</Button>
                 <h3>{this.props.error}</h3>
             </div>
@@ -34,8 +34,8 @@ function mapStateToProps({ error }) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        fetchTopicList(meta) {
-            dispatch(fetchTopicList(meta));
+        getProjectListAction(meta) {
+            dispatch(getProjectListAction(meta));
         }
     }
 }

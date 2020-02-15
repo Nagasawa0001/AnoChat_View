@@ -3,24 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import { topicListReducer, topicListSagas, initialState } from './modules/TopicList';
+import { projectListReducer, projectListSagas, initialState } from './modules/ProjectList';
 import { createStore, applyMiddleware } from 'redux';
 import { all } from 'redux-saga/effects';
 import createSagaMiddleware from 'redux-saga'
 import { Router, Switch, Route } from 'react-router-dom';
-import TopicList from './components/templates/TopicList';
+import ProjectList from './components/templates/ProjectList';
 import Top from './components/templates/Top';
-import TopicDetail from './components/templates/TopicDetail';
+import ProjectDetail from './components/templates/ProjectDetail';
 import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
 
-const allSagas = [...topicListSagas,];
+const allSagas = [...projectListSagas,];
 
 function* rootSaga(context) {
     yield all(allSagas.map(f => f(context)));
 }
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(topicListReducer, initialState, applyMiddleware(sagaMiddleware, createLogger()));
+const store = createStore(projectListReducer, initialState, applyMiddleware(sagaMiddleware, createLogger()));
 
 const history = createHistory();
 
@@ -33,8 +33,8 @@ class App extends React.Component {
                 <Provider store={store}>
                     <Switch>
                         <Route exact path={'/'} component={Top} />
-                        <Route exact path={'/topic'} component={TopicList} />
-                        <Route exact path={'/topic/1'} component={TopicDetail} />
+                        <Route exact path={'/project'} component={ProjectList} />
+                        <Route exact path={'/project/1'} component={ProjectDetail} />
                     </Switch>
                 </Provider>
     </Router>
