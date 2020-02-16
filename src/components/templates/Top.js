@@ -2,8 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import Button from '@material-ui/core/Button';
 import '../../assets/Top.css';
-import { connect } from 'react-redux';
-import { getProjectListAction } from '../../modules/ProjectList';
 
 
 class Top extends React.Component {
@@ -26,18 +24,4 @@ class Top extends React.Component {
     }
 }
 
-function mapStateToProps({ error }) {
-    return {
-        error
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        getProjectListAction(meta) {
-            dispatch(getProjectListAction(meta));
-        }
-    }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Top));
+export default withRouter(Top);

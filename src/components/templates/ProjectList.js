@@ -13,7 +13,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -25,16 +24,23 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Divider from '@material-ui/core/Divider';
-import SpeakerNotesSharpIcon from '@material-ui/icons/SpeakerNotesSharp';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { getProjectListAction } from '../../modules/ProjectList';
+import getProjectListAction from '../../modules/actions/ProjectList';
+import checkProjectMemberAction from '../../modules/actions/ProjectDetail';
+import HomeIcon from '@material-ui/icons/Home';
+import { Button } from '@material-ui/core';
 
-export const categoryTags = [
-    { id: 1, name: 'ニュース' },
-    { id: 2, name: '雑談' }
+const languages = [
+    { id: 2, name: "Java", url: '/topImages/java-icon.svg' },
+    { id: 3, name: "Javascript", url: '/topImages/javascript-icon.svg' }
 ]
 
+const categories = [
+    { id: 2, name: '初心者歓迎'},
+    { id: 3, name: '経験者募集'}
+]
 
 
 const styles = theme => ({
@@ -106,8 +112,8 @@ const styles = theme => ({
         },
     },
     card: {
-        maxWidth: 260,
-        maxHeight: 270,
+        width: 250,
+        maxHeight: 300,
         margin: 10,
         borderRadius: 5,
     },
@@ -117,14 +123,21 @@ const styles = theme => ({
 
     cardList: {
         display: 'flex',
-        flexWrap: "wrap",
+        flexWrap: 'wrap',
         marginLeft: 30,
     },
     main: {
         display: 'flex',
     },
     projectTitle: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
+    },
+    metaInfo: {
+        marginTop: 55,
+    },
+
+    appbar: {
+        background : '#deb887',
     }
 });
 
@@ -139,23 +152,29 @@ class projectList extends React.Component {
         this.props.getProjectListAction(meta);
     }
 
+    handleToTopicDetail(projectId) {
+        const userInfoList = this.props.userInfoList;
+        this.props.checkProjectMemberAction(projectId, userInfoList)
+    }
+
     render() {
         const { classes } = this.props;
         const projects = this.props.projects;
+        console.log(this.props);
         return (
             <div>
                 <div className={classes.grow}>
-                    <AppBar position="static">
+                    <AppBar position='static' className={classes.appbar}>
                         <Toolbar>
                             <IconButton
-                                edge="start"
+                                edge='start'
                                 className={classes.menuButton}
-                                color="inherit"
-                                aria-label="open drawer"
+                                color='inherit'
+                                aria-label='open drawer'
                             >
-                                <MenuIcon />
+                                <HomeIcon />
                             </IconButton>
-                            <Typography className={classes.title} variant="h6" noWrap>
+                            <Typography className={classes.title} variant='h6' noWrap>
                                 トピック
                             </Typography>
                             <div className={classes.search}>
@@ -163,7 +182,7 @@ class projectList extends React.Component {
                                     <SearchIcon />
                                 </div>
                                 <InputBase
-                                    placeholder="トピック名で検索..."
+                                    placeholder='トピック名で検索...'
                                     classes={{
                                         root: classes.inputRoot,
                                         input: classes.inputInput,
@@ -173,34 +192,34 @@ class projectList extends React.Component {
                             </div>
                             <div className={classes.grow} />
                             <div className={classes.sectionDesktop}>
-                                <IconButton aria-label="show 4 new mails" color="inherit">
-                                    <Badge badgeContent={4} color="secondary">
+                                <IconButton aria-label='show 4 new mails' color='inherit'>
+                                    <Badge badgeContent={4} color='secondary'>
                                         <MailIcon />
                                     </Badge>
                                 </IconButton>
-                                <IconButton aria-label="show 17 new notifications" color="inherit">
-                                    <Badge badgeContent={17} color="secondary">
+                                <IconButton aria-label='show 17 new notifications' color='inherit'>
+                                    <Badge badgeContent={17} color='secondary'>
                                         <NotificationsIcon />
                                     </Badge>
                                 </IconButton>
                                 <IconButton
-                                    edge="end"
-                                    aria-label="account of current user"
-                                    aria-controls=""
-                                    aria-haspopup="true"
-                                    onClick=""
-                                    color="inherit"
+                                    edge='end'
+                                    aria-label='account of current user'
+                                    aria-controls=''
+                                    aria-haspopup='true'
+                                    onClick=''
+                                    color='inherit'
                                 >
                                     <AccountCircle />
                                 </IconButton>
                             </div>
                             <div className={classes.sectionMobile}>
                                 <IconButton
-                                    aria-label="show more"
-                                    aria-controls=""
-                                    aria-haspopup="true"
-                                    onClick=""
-                                    color="inherit"
+                                    aria-label='show more'
+                                    aria-controls=''
+                                    aria-haspopup='true'
+                                    onClick=''
+                                    color='inherit'
                                 >
                                     <MoreIcon />
                                 </IconButton>
@@ -210,62 +229,87 @@ class projectList extends React.Component {
                 </div>
                 <div className={classes.main}>
                     <div className={classes.root}>
-                        <List component="nav" aria-label="main mailbox folders">
+                        <List component='nav' aria-label='main mailbox folders'>
                             <ListItem>
                                 <ListItemIcon>
-                                    <ListItemText primary="● カテゴリ" />
+                                    <ListItemText primary='■ 言語' />
                                 </ListItemIcon>
                             </ListItem>
                             {
-                                categoryTags.map(function (categoryTag, i) {
+                                languages.map(function (language, i) {
                                     return (
                                         <div>
                                             <ListItem button>
                                                 <ListItemIcon>
                                                     <InboxIcon />
                                                 </ListItemIcon>
-                                                <ListItemText key={i} primary={categoryTag.name} />
+                                                <ListItemText key={i} primary={language.name} />
                                             </ListItem>
                                             <Divider light />
                                         </div>
                                     );
                                 })
-
+                            }
+                        </List>
+                        <List component='nav' aria-label='main mailbox folders'>
+                            <ListItem>
+                                <ListItemIcon>
+                                    <ListItemText primary='■ カテゴリ' />
+                                </ListItemIcon>
+                            </ListItem>
+                            {
+                                categories.map(function (category, i) {
+                                    return (
+                                        <div>
+                                            <ListItem button>
+                                                <ListItemIcon>
+                                                    <InboxIcon />
+                                                </ListItemIcon>
+                                                <ListItemText key={i} primary={category.name} />
+                                            </ListItem>
+                                            <Divider light />
+                                        </div>
+                                    );
+                                })
                             }
                         </List>
                     </div>
                     <div className={classes.cardList}>
                         {
-                            projects.map(function (project, i) {
-                                const moment = require('moment')
-                                const createdAt = moment(project.created_at).format('YYYY/MM/DD hh:mm');
-                                return (
-                                    <Card className={classes.card} key={i}>
-                                        <CardActionArea>
+                            projects.map((project) =>
+                               // const moment = require('moment');
+                                //const date = new Date();
+                                //const createDate = moment().format('YYYY/MM/DD');
+                               // const createDate = project.createDate;
+                              //  const topImageURL = languages.find(language => language.id === project.languageId1).url
+           
+                                    <Card className={classes.card} key={project.id}>
+                                        <Button onClick={this.handleToTopicDetail.bind(this, 1)}>aaaaa</Button> 
+                                        <CardActionArea >
                                             <CardContent>
-                                                <Typography className={classes.projectTitle} gutterBottom variant="h6" component="h2" >
+                                                <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
                                                     {project.title}
                                                 </Typography>
                                             </CardContent>
                                             <CardMedia
                                                 className={classes.media}
-                                                image="/images/top-img01.png"
-                                                title="Contemplative Reptile"
+                                                //image={topImageURL}
+                                                title='Contemplative Reptile'
                                             />
-                                        </CardActionArea>
+                                        
                                         <CardActions>
-                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                作成日:{createdAt}
+                                            <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
+                                                作成日:createDate
                                             </Typography>
-                                            <Typography variant="body2" color="textSecondary" component="p">
-                                                <SpeakerNotesSharpIcon fontSize="small" />
+                                            <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
+                                                <PeopleAltIcon fontSize='small' />
                                                 120
                                             </Typography>
                                         </CardActions>
+                                        </CardActionArea>
                                     </Card>
-                                );
-                            })
-
+            
+                            )
                         }
 
                     </div>
@@ -276,9 +320,10 @@ class projectList extends React.Component {
 }
 
 function mapStateToProps(store) {
-    console.log(store.projects);
+    console.log(store.projectInfoList);
     return {
-        projects: store.projects,
+        projects: store.projectInfoList.projects,
+        userInfoList: store.userInfoList,
     }
 }
 
@@ -286,6 +331,9 @@ function mapDispatchToProps(dispatch) {
     return {
         getProjectListAction(meta) {
             dispatch(getProjectListAction(meta));
+        },
+        checkProjectMemberAction(userInfo, projectId) {
+            dispatch(checkProjectMemberAction(userInfo, projectId));
         }
     }
 }

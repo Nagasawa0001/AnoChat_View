@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import { projectListReducer, projectListSagas, initialState } from './modules/ProjectList';
+import { projectListSagas } from './modules/middlewares/ProjectList';
+import rootReducers from './modules/reducers/allReducers';
+import { projectListReducer } from './modules/reducers/ProjectList';
 import { createStore, applyMiddleware } from 'redux';
 import { all } from 'redux-saga/effects';
 import createSagaMiddleware from 'redux-saga'
@@ -20,7 +21,8 @@ function* rootSaga(context) {
     yield all(allSagas.map(f => f(context)));
 }
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(projectListReducer, initialState, applyMiddleware(sagaMiddleware, createLogger()));
+const store = createStore(rootReducers, applyMiddleware(sagaMiddleware, createLogger()));
+console.log(store.getState());
 
 const history = createHistory();
 
