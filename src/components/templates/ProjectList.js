@@ -28,19 +28,9 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import getProjectListAction from '../../modules/actions/ProjectList';
-import checkProjectMemberAction from '../../modules/actions/ProjectDetail';
+import getProjectDetailAction from '../../modules/actions/ProjectDetail';
 import HomeIcon from '@material-ui/icons/Home';
 import { Button } from '@material-ui/core';
-
-const languages = [
-    { id: 2, name: "Java", url: '/topImages/java-icon.svg' },
-    { id: 3, name: "Javascript", url: '/topImages/javascript-icon.svg' }
-]
-
-const categories = [
-    { id: 2, name: '初心者歓迎'},
-    { id: 3, name: '経験者募集'}
-]
 
 
 const styles = theme => ({
@@ -137,7 +127,7 @@ const styles = theme => ({
     },
 
     appbar: {
-        background : '#deb887',
+        background: '#deb887',
     }
 });
 
@@ -153,14 +143,13 @@ class projectList extends React.Component {
     }
 
     handleToTopicDetail(projectId) {
-        const userInfoList = this.props.userInfoList;
-        this.props.checkProjectMemberAction(projectId, userInfoList)
+        console.log(projectId);
+        this.props.getProjectDetailAction(projectId)
     }
 
     render() {
         const { classes } = this.props;
-        const projects = this.props.projects;
-        console.log(this.props);
+        console.log(this.props.categories);
         return (
             <div>
                 <div className={classes.grow}>
@@ -235,80 +224,48 @@ class projectList extends React.Component {
                                     <ListItemText primary='■ 言語' />
                                 </ListItemIcon>
                             </ListItem>
+                            <Divider />
                             {
-                                languages.map(function (language, i) {
-                                    return (
-                                        <div>
-                                            <ListItem button>
-                                                <ListItemIcon>
-                                                    <InboxIcon />
-                                                </ListItemIcon>
-                                                <ListItemText key={i} primary={language.name} />
-                                            </ListItem>
-                                            <Divider light />
-                                        </div>
-                                    );
-                                })
-                            }
-                        </List>
-                        <List component='nav' aria-label='main mailbox folders'>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <ListItemText primary='■ カテゴリ' />
-                                </ListItemIcon>
-                            </ListItem>
-                            {
-                                categories.map(function (category, i) {
-                                    return (
-                                        <div>
-                                            <ListItem button>
-                                                <ListItemIcon>
-                                                    <InboxIcon />
-                                                </ListItemIcon>
-                                                <ListItemText key={i} primary={category.name} />
-                                            </ListItem>
-                                            <Divider light />
-                                        </div>
-                                    );
-                                })
+                                this.props.languages.map((language) => 
+                                <div>
+                                <ListItem button>
+                                    <ListItemText key={language.id} inset primary={language.name} />
+                                </ListItem>
+                                <Divider />
+                                </div>
+                                )
+                                
                             }
                         </List>
                     </div>
                     <div className={classes.cardList}>
                         {
-                            projects.map((project) =>
-                               // const moment = require('moment');
-                                //const date = new Date();
-                                //const createDate = moment().format('YYYY/MM/DD');
-                               // const createDate = project.createDate;
-                              //  const topImageURL = languages.find(language => language.id === project.languageId1).url
-           
-                                    <Card className={classes.card} key={project.id}>
-                                        <Button onClick={this.handleToTopicDetail.bind(this, 1)}>aaaaa</Button> 
-                                        <CardActionArea >
-                                            <CardContent>
-                                                <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
-                                                    {project.title}
-                                                </Typography>
-                                            </CardContent>
-                                            <CardMedia
-                                                className={classes.media}
-                                                //image={topImageURL}
-                                                title='Contemplative Reptile'
-                                            />
-                                        
+                            this.props.projects.map((project) =>
+                                <Card className={classes.card} key={project.id}>
+                                    {/* <Button onClick={this.handleToTopicDetail.bind(this, 1)}>aaaaa</Button>  */}
+                                    <CardActionArea onClick={this.handleToTopicDetail.bind(this, project.id)}>
+                                        <CardContent>
+                                            <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
+                                                {project.title}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardMedia
+                                            className={classes.media}
+                                            image={project.imageURL}
+                                            title='Contemplative Reptile'
+                                        />
+
                                         <CardActions>
                                             <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
-                                                作成日:createDate
+                                                作成日:{project.createDate}
                                             </Typography>
                                             <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
                                                 <PeopleAltIcon fontSize='small' />
                                                 120
                                             </Typography>
                                         </CardActions>
-                                        </CardActionArea>
-                                    </Card>
-            
+                                    </CardActionArea>
+                                </Card>
                             )
                         }
 
@@ -320,10 +277,11 @@ class projectList extends React.Component {
 }
 
 function mapStateToProps(store) {
-    console.log(store.projectInfoList);
+    const list = store.projectInfoList.infoList;
     return {
-        projects: store.projectInfoList.projects,
-        userInfoList: store.userInfoList,
+        projects: list.projectList,
+        languages: list.languageList,
+        categories: list.categoryList
     }
 }
 
@@ -332,8 +290,8 @@ function mapDispatchToProps(dispatch) {
         getProjectListAction(meta) {
             dispatch(getProjectListAction(meta));
         },
-        checkProjectMemberAction(userInfo, projectId) {
-            dispatch(checkProjectMemberAction(userInfo, projectId));
+        getProjectDetailAction(projectId) {
+            dispatch(getProjectDetailAction(projectId));
         }
     }
 }

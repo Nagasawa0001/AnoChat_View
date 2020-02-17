@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import '../../setting.js';
-import { CHECK_PROJECTMEMBER_REQUEST, CHECK_PROJECTMEMBER_EXIST, CHECK_PROJECTMEMBER_NOTEXIST, CHECK_PROJECTMEMBER_UNLOGIN } from '../actions/ProjectDetail';
+import { GET_PROJECTDETAIL_REQUEST, GET_PROJECTDETAIL_SUCCESS, GET_PROJECTDETAIL_FAILURE } from '../actions/ProjectDetail';
 
 
-const requestCheckProjectMember = (projectId) => axios.get('http://localhost:8080/project/' + projectId)
+const requestGetProjectDetail = (projectId) => axios.get('http://localhost:8080/project/' + projectId)
 .then((res) => {
     const result = res.data;
     console.log(result);
@@ -15,30 +15,22 @@ const requestCheckProjectMember = (projectId) => axios.get('http://localhost:808
     return { error }
 })
 
-function* checkProjectMember(context, action){
-   const { result, error } = yield call(requestCheckProjectMember(action.projectId));
+function* getProjectDetail(context, action){
+   const { projectDetail, error } = yield call(requestGetProjectDetail(action.projectId));
 
-   if(result.loggedIn) {
-       if(result.isExist) {
-           yield put({type: CHECK_PROJECTMEMBER_EXIST, action});
-           yield call(context.history.push, '/project/manage/' + action.projectId);
-       } else {
-           yield put({type: CHECK_PROJECTMEMBER_NOTEXIST, action});
-           yield call(context.history.push, '/project/' + action.projectId);
-       }
+   if(projectDetail) {
+       yield put({type: GET_PROJECTDETAIL_SUCCESS, projectDetail});
+       yield call(context.history.push, '/project/' + projectDetail.id)
    } else {
-       yield put({type: CHECK_PROJECTMEMBER_UNLOGIN});
-       yield call(context.history.push, '/register/user')
-   }
-   if(error) {
        console.log('予期せぬエラーが発生しました　エラー：　' + error);
+       yield put({type: GET_PROJECTDETAIL_FAILURE, error})
    }
 }
 
-function* checkProjectMemberSaga(context) {
-    yield takeLatest(CHECK_PROJECTMEMBER_REQUEST, checkProjectMember, context)
+function* getProjectDetailSaga(context) {
+    yield takeLatest(GET_PROJECTDETAIL_REQUEST, getProjectDetail, context)
 }
 
-export const projectListSagas = [
-    checkProjectMemberSaga,
+export const projectDetailSagas = [
+    getProjectDetailSaga,
 ];

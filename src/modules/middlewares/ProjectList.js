@@ -6,21 +6,19 @@ import { PROJECTLIST_GET_REQUEST, PROJECTLIST_GET_SUCCESS, PROJECTLIST_GET_FAILU
 // Middleware
 const requestProjectList = () => axios.get('http://localhost:8080/project')
     .then((res) => {
-        const projects = res.data
-        console.log(res.data)
-        return { projects }
+        const infoList = res.data
+        return { infoList }
     })
     .catch((error) => {
-        console.log(error)
         return { error }
     })
 
 function* getProjectList(context, action) {
     const meta = action.meta || {};
-    const { projects, error } = yield call(requestProjectList);
+    const { infoList, error } = yield call(requestProjectList);
 
-    if (projects) {
-        yield put({ type: PROJECTLIST_GET_SUCCESS, projects});
+    if (infoList.projectList) {
+        yield put({ type: PROJECTLIST_GET_SUCCESS, infoList});
         yield call(context.history.push, meta.success)
     } else {
         console.log(error);

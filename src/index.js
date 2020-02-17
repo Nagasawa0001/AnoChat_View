@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { projectListSagas } from './modules/middlewares/ProjectList';
+import { projectDetailSagas } from './modules/middlewares/ProjectDetail';
 import rootReducers from './modules/reducers/allReducers';
 import { projectListReducer } from './modules/reducers/ProjectList';
 import { createStore, applyMiddleware } from 'redux';
@@ -15,7 +16,7 @@ import ProjectDetail from './components/templates/ProjectDetail';
 import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
 
-const allSagas = [...projectListSagas,];
+const allSagas = [...projectListSagas, ...projectDetailSagas];
 
 function* rootSaga(context) {
     yield all(allSagas.map(f => f(context)));

@@ -1,25 +1,22 @@
-import { CHECK_PROJECTMEMBER_REQUEST, CHECK_PROJECTMEMBER_EXIST, CHECK_PROJECTMEMBER_NOTEXIST, CHECK_PROJECTMEMBER_UNLOGIN } from '../actions/ProjectDetail'
+import { GET_PROJECTDETAIL_REQUEST, GET_PROJECTDETAIL_SUCCESS, GET_PROJECTDETAIL_FAILURE } from '../actions/ProjectDetail'
 
 const secondState = {
-    loggedIn: false,
-    projectIdList: [],
+    processing: false,
+    projects: [],
     error: '',
 }
 
-export function checkProjectMemberReducer(state = secondState, action) {
+export function projectDetailReducer(state = secondState, action) {
     switch (action.type) {
-        case CHECK_PROJECTMEMBER_REQUEST:
-            return Object.assign({}, state, { loggedId: action.loggedId, projectIdList: action.userInfo.projectIdList, error: '' })
+        case GET_PROJECTDETAIL_REQUEST:
+            return Object.assign({}, state, { processing: true })
 
-        case CHECK_PROJECTMEMBER_EXIST:
+        case GET_PROJECTDETAIL_SUCCESS:
             state.projects = action.projects
-            return Object.assign({}, state, { loggedId: action.loggedId, projectIdList: action.userInfo.projectIdList, error: '' });
+            return Object.assign({}, state, { processing: false, projectDetail: action.projectDetail});
 
-        case CHECK_PROJECTMEMBER_NOTEXIST:
-            return Object.assign({}, state, { loggedId: action.loggedId, projectIdList: action.userInfo.projectIdList, error: '' })
-
-            case CHECK_PROJECTMEMBER_UNLOGIN:
-                return Object.assign({}, state, { loggedId: action.loggedId, projectIdList: action.userInfo.projectIdList, error: '' })
+        case GET_PROJECTDETAIL_FAILURE:
+            return Object.assign({}, state, { processing: false, error: action.error })
 
         default:
          return Object.assign({}, state);

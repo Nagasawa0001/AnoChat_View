@@ -1,17 +1,12 @@
 import { CHECK_PROJECTMEMBER_REQUEST, CHECK_PROJECTMEMBER_EXIST, CHECK_PROJECTMEMBER_NOTEXIST, CHECK_PROJECTMEMBER_UNLOGIN } from '../actions/ProjectDetail'
 
-
-const initialState = {
+const secondState = {
+    processing: false,
     loggedIn: false,
-    userInfo: {
-        id: 1,
-        name: 'aaaa',
-        email: 'eeee',
-    },
     error: '',
 }
 
-export function userInfoListReducer(state = initialState, action) {
+export function checkProjectMemberReducer(state = secondState, action) {
     switch (action.type) {
         case CHECK_PROJECTMEMBER_REQUEST:
             return Object.assign({}, state, { loggedId: action.loggedId, projectIdList: action.userInfo.projectIdList, error: '' })
