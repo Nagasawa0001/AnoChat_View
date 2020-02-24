@@ -14,16 +14,16 @@ const requestProjectList = () => axios.get('http://localhost:8080/project')
     })
 
 function* getProjectList(context, action) {
-    const meta = action.meta || {};
+    const path = action.path || {};
     const { infoList, error } = yield call(requestProjectList);
+    console.log(infoList);
 
-    if (infoList.projectList) {
+    if (infoList.projectList || infoList.categoryList || infoList.languageList) {
         yield put({ type: PROJECTLIST_GET_SUCCESS, infoList});
-        yield call(context.history.push, meta.success)
     } else {
-        console.log(error);
+        console.log('aaaa' + error);
         yield put({ type: PROJECTLIST_GET_FAILURE, error: '予期せぬエラーが発生しました。開発者に連絡してください' });
-        yield call(context.history.push, meta.failure)
+        yield call(context.history.push, path.failure)
 
     }
 }

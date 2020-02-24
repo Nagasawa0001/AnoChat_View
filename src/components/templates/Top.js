@@ -7,7 +7,7 @@ import '../../assets/Top.css';
 class Top extends React.Component {
 
 
-    handleToTopicList = () => {
+    handleToProjectList = () => {
         this.props.history.push('/project');
     }
 
@@ -17,7 +17,7 @@ class Top extends React.Component {
                 
                 <h1 className="title">CoopLab</h1>
                 <p className="discription">Easy Co-op Development</p>
-                <Button className="start-btn" variant="contained" onClick={this.handleToTopicList}>Get Started</Button>
+                <Button className="start-btn" variant="contained" onClick={this.handleToProjectList}>Get Started</Button>
                 <h3>{this.props.error}</h3>
             </div>
         )

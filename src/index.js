@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { projectListSagas } from './modules/middlewares/ProjectList';
 import { projectDetailSagas } from './modules/middlewares/ProjectDetail';
 import rootReducers from './modules/reducers/allReducers';
-import { projectListReducer } from './modules/reducers/ProjectList';
 import { createStore, applyMiddleware } from 'redux';
 import { all } from 'redux-saga/effects';
 import createSagaMiddleware from 'redux-saga'

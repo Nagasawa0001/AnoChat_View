@@ -4,9 +4,9 @@ export const PROJECTLIST_GET_SUCCESS = 'PROJECTLIST_GET_SUCCESS';
 export const PROJECTLIST_GET_FAILURE = 'PROJECTLIST_GET_FAILURE';
 
 // Action Creator
-export default function getProjectListAction(meta) {
+export default function getProjectListAction(path) {
     return {
         type: PROJECTLIST_GET_REQUEST,
-        meta
+        path
     }
 }

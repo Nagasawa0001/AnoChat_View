@@ -5,7 +5,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/Inbox';
 import { fade } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -30,7 +29,6 @@ import { connect } from 'react-redux';
 import getProjectListAction from '../../modules/actions/ProjectList';
 import getProjectDetailAction from '../../modules/actions/ProjectDetail';
 import HomeIcon from '@material-ui/icons/Home';
-import { Button } from '@material-ui/core';
 
 
 const styles = theme => ({
@@ -134,12 +132,12 @@ const styles = theme => ({
 
 class projectList extends React.Component {
 
-    componentDidMount() {
-        const meta = {
-            success: '/project',
+    componentWillMount() {
+        const path = {
             failure: '/'
         }
-        this.props.getProjectListAction(meta);
+        console.log(this.props);
+        this.props.getProjectListAction(path);
     }
 
     handleToTopicDetail(projectId) {
@@ -149,7 +147,9 @@ class projectList extends React.Component {
 
     render() {
         const { classes } = this.props;
-        console.log(this.props.categories);
+        console.log(this.props);
+        // console.log(this.props.languageList);
+        // console.log(this.props);
         return (
             <div>
                 <div className={classes.grow}>
@@ -226,7 +226,7 @@ class projectList extends React.Component {
                             </ListItem>
                             <Divider />
                             {
-                                this.props.languages.map((language) => 
+                                this.props.languageList.map((language) => 
                                 <div>
                                 <ListItem button>
                                     <ListItemText key={language.id} inset primary={language.name} />
@@ -237,12 +237,32 @@ class projectList extends React.Component {
                                 
                             }
                         </List>
+                        <div className={classes.root}>
+                        <List component='nav' aria-label='main mailbox folders'>
+                            <ListItem>
+                                <ListItemIcon>
+                                    <ListItemText primary='■ カテゴリ' />
+                                </ListItemIcon>
+                            </ListItem>
+                            <Divider />
+                            {
+                                this.props.categoryList.map((category) => 
+                                <div>
+                                <ListItem button>
+                                    <ListItemText key={category.id} inset primary={category.name} />
+                                </ListItem>
+                                <Divider />
+                                </div>
+                                )
+                                
+                            }
+                        </List>
+                    </div>
                     </div>
                     <div className={classes.cardList}>
                         {
-                            this.props.projects.map((project) =>
+                            this.props.projectList.map((project) =>
                                 <Card className={classes.card} key={project.id}>
-                                    {/* <Button onClick={this.handleToTopicDetail.bind(this, 1)}>aaaaa</Button>  */}
                                     <CardActionArea onClick={this.handleToTopicDetail.bind(this, project.id)}>
                                         <CardContent>
                                             <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
@@ -257,7 +277,7 @@ class projectList extends React.Component {
 
                                         <CardActions>
                                             <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
-                                                作成日:{project.createDate}
+                                                作成日:{project.createdDate}
                                             </Typography>
                                             <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
                                                 <PeopleAltIcon fontSize='small' />
@@ -277,18 +297,18 @@ class projectList extends React.Component {
 }
 
 function mapStateToProps(store) {
-    const list = store.projectInfoList.infoList;
+    console.log(store);
     return {
-        projects: list.projectList,
-        languages: list.languageList,
-        categories: list.categoryList
+        projectList: store.infoList.projectInfo.projectList,
+        categoryList: store.infoList.categoryInfo.categoryList,
+        languageList: store.infoList.languageInfo.languageList
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        getProjectListAction(meta) {
-            dispatch(getProjectListAction(meta));
+        getProjectListAction(path) {
+            dispatch(getProjectListAction(path));
         },
         getProjectDetailAction(projectId) {
             dispatch(getProjectDetailAction(projectId));

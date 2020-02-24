@@ -2,18 +2,18 @@ import { CHECK_PROJECTMEMBER_REQUEST, CHECK_PROJECTMEMBER_EXIST, CHECK_PROJECTME
 
 const secondState = {
     processing: false,
-    loggedIn: false,
+    projects: [],
     error: '',
 }
 
 export function checkProjectMemberReducer(state = secondState, action) {
     switch (action.type) {
         case CHECK_PROJECTMEMBER_REQUEST:
-            return Object.assign({}, state, { loggedId: action.loggedId, projectIdList: action.userInfo.projectIdList, error: '' })
+            return Object.assign({}, state, { processing: true })
 
         case CHECK_PROJECTMEMBER_EXIST:
             state.projects = action.projects
-            return Object.assign({}, state, { loggedId: action.loggedId, projectIdList: action.userInfo.projectIdList, error: '' });
+            return Object.assign({}, state, { project: });
 
         case CHECK_PROJECTMEMBER_NOTEXIST:
             return Object.assign({}, state, { loggedId: action.loggedId, projectIdList: action.userInfo.projectIdList, error: '' })

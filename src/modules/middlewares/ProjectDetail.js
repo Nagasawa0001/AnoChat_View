@@ -4,7 +4,7 @@ import '../../setting.js';
 import { GET_PROJECTDETAIL_REQUEST, GET_PROJECTDETAIL_SUCCESS, GET_PROJECTDETAIL_FAILURE } from '../actions/ProjectDetail';
 
 
-const requestGetProjectDetail = (projectId) => axios.get('http://localhost:8080/project/' + projectId)
+const requestGetProjectDetail = (projectId) => axios.get('http://localhost:8080/project/detail?id=' + projectId)
 .then((res) => {
     const result = res.data;
     console.log(result);
@@ -16,7 +16,8 @@ const requestGetProjectDetail = (projectId) => axios.get('http://localhost:8080/
 })
 
 function* getProjectDetail(context, action){
-   const { projectDetail, error } = yield call(requestGetProjectDetail(action.projectId));
+   const { projectDetail, error } = yield call(requestGetProjectDetail, action.projectId);
+   console.log('projectDetail: ' + projectDetail);
 
    if(projectDetail) {
        yield put({type: GET_PROJECTDETAIL_SUCCESS, projectDetail});

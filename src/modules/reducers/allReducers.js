@@ -3,6 +3,6 @@ import { projectListReducer } from './ProjectList';
 import { projectDetailReducer } from './ProjectDetail';
 
 export default combineReducers({
-    projectInfoList: projectListReducer,
+    infoList: projectListReducer,
     projectDetail: projectDetailReducer,
 });
