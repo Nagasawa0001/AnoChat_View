@@ -281,7 +281,7 @@ class projectList extends React.Component {
                                             </Typography>
                                             <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
                                                 <PeopleAltIcon fontSize='small' />
-                                                120
+                                                {project.currentNumber}人参加中
                                             </Typography>
                                         </CardActions>
                                     </CardActionArea>

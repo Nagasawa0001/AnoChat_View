@@ -36,7 +36,7 @@ class App extends React.Component {
                     <Switch>
                         <Route exact path={'/'} component={Top} />
                         <Route exact path={'/project'} component={ProjectList} />
-                        <Route exact path={'/project/1'} component={ProjectDetail} />
+                        <Route exact path={'/project/:id'} component={ProjectDetail} />
                     </Switch>
                 </Provider>
     </Router>
