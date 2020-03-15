@@ -11,9 +11,13 @@ import createSagaMiddleware from 'redux-saga'
 import { Router, Switch, Route } from 'react-router-dom';
 import ProjectList from './components/templates/ProjectList';
 import Top from './components/templates/Top';
+import Signup from './components/templates/Signup';
+import Signin from './components/templates/Signin';
+import InputEmail from './components/templates/InputEmail';
 import ProjectDetail from './components/templates/ProjectDetail';
 import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
+import InputPassword from './components/templates/InputPassword';
 
 const allSagas = [...projectListSagas, ...projectDetailSagas];
 
@@ -35,6 +39,10 @@ class App extends React.Component {
                 <Provider store={store}>
                     <Switch>
                         <Route exact path={'/'} component={Top} />
+                        <Route exact path={'/signup'} component={Signup} />
+                        <Route exact path={'/signin'} component={Signin} />
+                        <Route exact path={'/reset/email'} component={InputEmail} />
+                        <Route exact path={'/reset/password'} component={InputPassword} />
                         <Route exact path={'/project'} component={ProjectList} />
                         <Route exact path={'/project/:id'} component={ProjectDetail} />
                     </Switch>

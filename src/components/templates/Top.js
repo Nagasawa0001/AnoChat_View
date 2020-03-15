@@ -7,8 +7,12 @@ import '../../assets/Top.css';
 class Top extends React.Component {
 
 
-    handleToProjectList = () => {
-        this.props.history.push('/project');
+    handleToSignin = () => {
+        this.props.history.push('/signin');
+    }
+
+    handleToSignup = () => {
+        this.props.history.push('/signup');
     }
 
     render() {
@@ -16,8 +20,9 @@ class Top extends React.Component {
             <div>
                 
                 <h1 className="title">CoopLab</h1>
-                <p className="discription">Easy Co-op Development</p>
-                <Button className="start-btn" variant="contained" onClick={this.handleToProjectList}>Get Started</Button>
+                <p className="discription">Easy Task Management!</p>
+                <Button color="primary" className="start-btn" variant="contained" onClick={this.handleToSignin}>Signin</Button>
+                <Button color="secondary" className="start-btn" variant="contained" onClick={this.handleToSignup}>Signup</Button>
                 <h3>{this.props.error}</h3>
             </div>
         )
