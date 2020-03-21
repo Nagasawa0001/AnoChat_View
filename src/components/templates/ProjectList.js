@@ -26,8 +26,8 @@ import Divider from '@material-ui/core/Divider';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import getProjectListAction from '../../modules/actions/ProjectList';
-import getProjectDetailAction from '../../modules/actions/ProjectDetail';
+import { getProjectListAction } from '../../modules/ProjectList';
+import { getProjectDetailAction } from '../../modules/ProjectDetail';
 import HomeIcon from '@material-ui/icons/Home';
 
 
@@ -136,20 +136,15 @@ class projectList extends React.Component {
         const path = {
             failure: '/'
         }
-        console.log(this.props);
         this.props.getProjectListAction(path);
     }
 
     handleToTopicDetail(projectId) {
-        console.log(projectId);
         this.props.getProjectDetailAction(projectId)
     }
 
     render() {
         const { classes } = this.props;
-        console.log(this.props);
-        // console.log(this.props.languageList);
-        // console.log(this.props);
         return (
             <div>
                 <div className={classes.grow}>
@@ -297,7 +292,6 @@ class projectList extends React.Component {
 }
 
 function mapStateToProps(store) {
-    console.log(store);
     return {
         projectList: store.infoList.projectInfo.projectList,
         categoryList: store.infoList.categoryInfo.categoryList,

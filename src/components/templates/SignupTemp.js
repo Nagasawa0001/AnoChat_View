@@ -16,6 +16,7 @@ import { signupTempAction } from '../../modules/SignupTemp';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = (theme) => ({
     paper: {
@@ -38,7 +39,7 @@ const styles = (theme) => ({
 });
 
 
-class Signup extends React.Component {
+class SignupTemp extends React.Component {
 
     submit(form , dispatch) {
       dispatch(signupTempAction(form));
@@ -48,8 +49,12 @@ class Signup extends React.Component {
     render() {
         const { classes } = this.props;
         const { handleSubmit } = this.props;
+        console.log(this.props);
         return (
             <Container component="main" maxWidth="xs">
+              {
+                this.props.processing ? (<CircularProgress color="secondary"/>) : ''
+              }
             <CssBaseline />
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
@@ -58,11 +63,21 @@ class Signup extends React.Component {
               <Typography component="h1" variant="h5">
                 Sign up
               </Typography>
-              <Typography component="subscription" variant="subscription" color="textSecondary">
-                メールアドレスにお送りしたトークンを使用してユーザー登録を完了させてください
-              </Typography>
               <form onSubmit={handleSubmit(this.submit.bind(this))}>
                 <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Field
+                      autoComplete="name"
+                      name="name"
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="name"
+                      label="name"
+                      autoFocus
+                      component={renderTextField}
+                    />
+                  </Grid>
                   <Grid item xs={12}>
                     <Field
                       variant="outlined"
@@ -80,10 +95,11 @@ class Signup extends React.Component {
                       variant="outlined"
                       required
                       fullWidth
-                      name="signup-token"
-                      label="signup-token"
-                      type="signup-token"
-                      id="signup-token"
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
                       component={renderTextField}
                     />
                   </Grid>
@@ -116,14 +132,14 @@ class Signup extends React.Component {
     }
 }
 
-Signup = reduxForm({
+SignupTemp = reduxForm({
   // a unique name for the form
-  form: 'signup'
-})(Signup)
+  form: 'signupTemp'
+})(SignupTemp)
 
 function mapStateToProps(store) {
   return {
-      state: store
+      processing: store.users.processing
   }
 }
 
@@ -136,4 +152,4 @@ function mapDispatchToProps(dispatch){
 }
 
 
-export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(Signup)));
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(SignupTemp)));
