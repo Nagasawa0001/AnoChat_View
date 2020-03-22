@@ -5,17 +5,17 @@ import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink } from 'react-router-dom';
-import { signupTempAction } from '../../modules/SignupTemp';
+import { signupAction } from '../../modules/Signup';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = (theme) => ({
     paper: {
@@ -40,8 +40,8 @@ const styles = (theme) => ({
 
 class Signup extends React.Component {
 
-    submit(form , dispatch) {
-      dispatch(signupTempAction(form));
+    submit(form, dispatch) {
+      dispatch(signupAction(form));
     }
 
 
@@ -50,6 +50,9 @@ class Signup extends React.Component {
         const { handleSubmit } = this.props;
         return (
             <Container component="main" maxWidth="xs">
+              {
+                this.props.processing ? (<CircularProgress color="secondary"/>) : ''
+              }
             <CssBaseline />
             <div className={classes.paper}>
               <Avatar className={classes.avatar}>
@@ -80,10 +83,10 @@ class Signup extends React.Component {
                       variant="outlined"
                       required
                       fullWidth
-                      name="signup-token"
-                      label="signup-token"
-                      type="signup-token"
-                      id="signup-token"
+                      name="signupToken"
+                      label="signupToken"
+                      type="signupToken"
+                      id="signupToken"
                       component={renderTextField}
                     />
                   </Grid>
@@ -123,14 +126,14 @@ Signup = reduxForm({
 
 function mapStateToProps(store) {
   return {
-      state: store
+    processing: store.signup.processing
   }
 }
 
 function mapDispatchToProps(dispatch){
   return {
-    signupTempAction(form){
-      dispatch(signupTempAction(form));
+    signupAction(form){
+      dispatch(signupAction(form));
     }
   }
 }

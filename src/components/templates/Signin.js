@@ -4,7 +4,6 @@ import '../../assets/Top.css';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -12,6 +11,10 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink } from 'react-router-dom';
+import { signinAction } from '../../modules/Signin';
+import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form'
+import renderTextField from '../atoms/TextField';
 
 const styles = theme => ({
     paper: {
@@ -35,8 +38,12 @@ const styles = theme => ({
 
 class Signin extends React.Component {
 
+  submit(form, dispatch) {
+    dispatch(signinAction(form));
+  }
+
     render() {
-        const {classes} = this.props;
+        const {classes, handleSubmit} = this.props;
         return (
             <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -47,29 +54,34 @@ class Signin extends React.Component {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
+        <form className={classes.form} onSubmit={handleSubmit(this.submit.bind(this))}>
+        <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                </Grid>
           <Button
             type="submit"
             fullWidth
@@ -79,6 +91,7 @@ class Signin extends React.Component {
           >
             Sign In
           </Button>
+          </form>
           <Grid container justify="flex-end">
           <Grid item>
                     <Link component={RouterLink} to="/signup" variant="body2">
@@ -91,11 +104,26 @@ class Signin extends React.Component {
                     </Grid>
                   </Grid>
           </Grid>
-        </form>
       </div>
     </Container>
         )
     }
 }
 
-export default withStyles(styles)(withRouter(Signin));
+Signin = reduxForm({
+  form: 'signin'
+})(Signin)
+
+function mapStateToProps(store){
+  console.log(store);
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    signinAction(form) {
+      dispatch(signinAction(form));
+    }
+  }
+}
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(Signin)));

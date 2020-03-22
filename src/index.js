@@ -4,7 +4,9 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { projectListSagas } from './modules/ProjectList';
 import { projectDetailSagas } from './modules/ProjectDetail';
-import { signupSagas } from './modules/SignupTemp';
+import { signupTempSagas } from './modules/SignupTemp';
+import { signupSagas } from './modules/Signup';
+import { signinSagas } from './modules/Signin';
 import rootReducers from './modules/allReducers';
 import { createStore, applyMiddleware } from 'redux';
 import { all } from 'redux-saga/effects';
@@ -21,7 +23,13 @@ import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
 import InputPassword from './components/templates/InputPassword';
 
-const allSagas = [...projectListSagas, ...projectDetailSagas, ...signupSagas];
+const allSagas = [
+    ...projectListSagas, 
+    ...projectDetailSagas, 
+    ...signupTempSagas, 
+    ...signupSagas, 
+    ...signinSagas
+];
 
 function* rootSaga(context) {
     yield all(allSagas.map(f => f(context)));
@@ -46,7 +54,7 @@ class App extends React.Component {
                         <Route exact path={'/signin'} component={Signin} />
                         <Route exact path={'/reset/email'} component={InputEmail} />
                         <Route exact path={'/reset/password'} component={InputPassword} />
-                        <Route exact path={'/project'} component={ProjectList} />
+                        <Route exact path={'/projects'} component={ProjectList} />
                         <Route exact path={'/project/:id'} component={ProjectDetail} />
                     </Switch>
                 </Provider>
