@@ -22,6 +22,7 @@ import ProjectDetail from './components/templates/ProjectDetail';
 import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
 import InputPassword from './components/templates/InputPassword';
+import { Redirect } from 'react-router-dom'
 
 const allSagas = [
     ...projectListSagas, 
@@ -36,7 +37,6 @@ function* rootSaga(context) {
 }
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore(rootReducers, applyMiddleware(sagaMiddleware, createLogger()));
-console.log(store.getState());
 
 const history = createHistory();
 
@@ -54,7 +54,7 @@ class App extends React.Component {
                         <Route exact path={'/signin'} component={Signin} />
                         <Route exact path={'/reset/email'} component={InputEmail} />
                         <Route exact path={'/reset/password'} component={InputPassword} />
-                        <Route exact path={'/projects'} component={ProjectList} />
+                        <Route exact path={'/projects'} render={() => ( this.props ? ( <ProjectList /> ) : ( <Redirect to={'/signin'} /> ))} />
                         <Route exact path={'/project/:id'} component={ProjectDetail} />
                     </Switch>
                 </Provider>

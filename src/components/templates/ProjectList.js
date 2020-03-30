@@ -19,9 +19,6 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Divider from '@material-ui/core/Divider';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { withStyles } from '@material-ui/core/styles';
@@ -29,6 +26,13 @@ import { connect } from 'react-redux';
 import { getProjectListAction } from '../../modules/ProjectList';
 import { getProjectDetailAction } from '../../modules/ProjectDetail';
 import HomeIcon from '@material-ui/icons/Home';
+import getJSESSION from '../../common';
+import Button from '@material-ui/core/Button';
+import { Field, reduxForm } from 'redux-form'
+import renderTextField from '../atoms/TextField';
+import { searchProjectAction } from '../../modules/ProjectList';
+import { confirmInvitationAction } from '../../modules/ProjectList';
+
 
 
 const styles = theme => ({
@@ -100,8 +104,8 @@ const styles = theme => ({
         },
     },
     card: {
-        width: 250,
-        maxHeight: 300,
+        width: 800,
+        maxHeight: 200,
         margin: 10,
         borderRadius: 5,
     },
@@ -126,25 +130,49 @@ const styles = theme => ({
 
     appbar: {
         background: '#deb887',
+    },
+    button: {
+        background: 'red'
+    },
+    cardBorder: {
+        border: 5,
     }
+
 });
 
 
 class projectList extends React.Component {
 
-    componentWillMount() {
-        const path = {
-            failure: '/'
+    componentDidMount() {
+        var sessionInfo = getJSESSION();
+        if (!sessionInfo.JSESSIONID && !sessionInfo.userId) {
+            this.props.history.push('/signin');
+        } else {
+            this.props.getProjectListAction(JSON.parse(sessionInfo.userId));
         }
-        this.props.getProjectListAction(path);
     }
 
     handleToTopicDetail(projectId) {
         this.props.getProjectDetailAction(projectId)
     }
 
+    submit(form, dispatch) {
+        dispatch(searchProjectAction(form));
+    }
+
+    confirmInvitation(messageId, toUserId, projectId) {
+        var messageInfo = {
+            id: messageId,
+            toUserId: toUserId,
+            projectId: projectId
+        }
+
+        this.props.confirmInvitationAction(messageInfo);
+    }
+
     render() {
-        const { classes } = this.props;
+        const { classes, handleSubmit } = this.props;
+        this.props.change("userId", getJSESSION().userId);
         return (
             <div>
                 <div className={classes.grow}>
@@ -159,20 +187,21 @@ class projectList extends React.Component {
                                 <HomeIcon />
                             </IconButton>
                             <Typography className={classes.title} variant='h6' noWrap>
-                                トピック
+                                PROJECT
                             </Typography>
                             <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon />
-                                </div>
-                                <InputBase
-                                    placeholder='トピック名で検索...'
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ 'aria-label': 'search' }}
-                                />
+                                <form onSubmit={handleSubmit(this.submit.bind(this))}>
+                                    <Field
+                                        placeholder='トピック名で検索...'
+                                        classes={{
+                                            root: classes.inputRoot,
+                                            input: classes.inputInput,
+                                        }}
+                                        component={renderTextField}
+                                        name='title'
+                                        id='title'
+                                    />
+                                </form>
                             </div>
                             <div className={classes.grow} />
                             <div className={classes.sectionDesktop}>
@@ -216,74 +245,78 @@ class projectList extends React.Component {
                         <List component='nav' aria-label='main mailbox folders'>
                             <ListItem>
                                 <ListItemIcon>
-                                    <ListItemText primary='■ 言語' />
+                                    <ListItemText primary='■ Invitation Message' />
                                 </ListItemIcon>
                             </ListItem>
-                            <Divider />
-                            {
-                                this.props.languageList.map((language) => 
-                                <div>
-                                <ListItem button>
-                                    <ListItemText key={language.id} inset primary={language.name} />
-                                </ListItem>
-                                <Divider />
-                                </div>
-                                )
-                                
-                            }
                         </List>
                         <div className={classes.root}>
-                        <List component='nav' aria-label='main mailbox folders'>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <ListItemText primary='■ カテゴリ' />
-                                </ListItemIcon>
-                            </ListItem>
-                            <Divider />
-                            {
-                                this.props.categoryList.map((category) => 
-                                <div>
-                                <ListItem button>
-                                    <ListItemText key={category.id} inset primary={category.name} />
-                                </ListItem>
+                            <List component='nav' aria-label='main mailbox folders'>
                                 <Divider />
-                                </div>
-                                )
-                                
-                            }
-                        </List>
-                    </div>
+                                {
+                                    this.props.messageList.map((message) =>
+                                        message.confirmed ? '' :
+                                            <div className={classes.cardBorder}>
+                                                <ListItem >
+                                                    <Typography className={classes.title} variant='p' noWrap>
+                                                        PROJECT :
+                                </Typography>
+                                                    <ListItemText key={message.id} inset primary={message.messageTitle} />
+                                                </ListItem>
+                                                <ListItem >
+                                                    <Typography className={classes.title} variant='p' noWrap>
+                                                        TITLE :
+                                </Typography>
+                                                    <ListItemText key={message.id} inset primary={message.messageTitle} />
+                                                </ListItem>
+                                                <ListItem >
+                                                    <Typography className={classes.title} variant='p' noWrap>
+                                                        CONTENT :
+                                </Typography>
+                                                    <ListItemText key={message.id} inset primary={message.content} />
+                                                </ListItem>
+                                                <ListItem >
+                                                    <Typography className={classes.title} variant='p' noWrap>
+                                                        CREATEDDTE :
+                                </Typography>
+                                                    <ListItemText key={message.id} inset primary={message.createdDate} />
+                                                </ListItem>
+                                                <Button
+                                                    fullWidth
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={this.confirmInvitation.bind(this, message.id, message.toUserId, message.projectId)}
+                                                >
+                                                    Join
+                                </Button>
+                                                <Divider />
+                                            </div>
+                                    )
+
+                                }
+                            </List>
+                        </div>
                     </div>
                     <div className={classes.cardList}>
                         {
                             this.props.projectList.map((project) =>
                                 <Card className={classes.card} key={project.id}>
                                     <CardActionArea onClick={this.handleToTopicDetail.bind(this, project.id)}>
-                                        <CardContent>
-                                            <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
-                                                {project.title}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardMedia
-                                            className={classes.media}
-                                            image={project.imageURL}
-                                            title='Contemplative Reptile'
-                                        />
 
-                                        <CardActions>
-                                            <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
-                                                作成日:{project.createdDate}
+                                        <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
+                                            {project.title}
+                                        </Typography>
+                                        <Typography gutterBottom variant='p' component='h2' >
+                                            {project.discription}
+                                        </Typography>
+                                        <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
+                                            CREATEDDATE:{project.createdDate}
+                                            <PeopleAltIcon fontSize='small' />
+                                            {project.currentUser}人参加中
                                             </Typography>
-                                            <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
-                                                <PeopleAltIcon fontSize='small' />
-                                                {project.currentNumber}人参加中
-                                            </Typography>
-                                        </CardActions>
                                     </CardActionArea>
                                 </Card>
                             )
                         }
-
                     </div>
                 </div>
             </div>
@@ -291,21 +324,34 @@ class projectList extends React.Component {
     }
 }
 
+projectList = reduxForm({
+    form: 'ProjectList'
+})(projectList)
+
 function mapStateToProps(store) {
+    console.log(store);
     return {
-        projectList: store.infoList.projectInfo.projectList,
-        categoryList: store.infoList.categoryInfo.categoryList,
-        languageList: store.infoList.languageInfo.languageList
+        projectList: store.projectInfo.userInfo.projectList,
+        messageList: store.projectInfo.userInfo.messageList,
+        userId: store.userInfo.profile.id,
+        loggedIn: store.userInfo.loggedIn
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        getProjectListAction(path) {
-            dispatch(getProjectListAction(path));
+        getProjectListAction(userId) {
+            dispatch(getProjectListAction(userId));
         },
         getProjectDetailAction(projectId) {
             dispatch(getProjectDetailAction(projectId));
+        },
+        searchProjectAction(userId, title) {
+            dispatch(searchProjectAction(userId, title));
+        },
+
+        confirmInvitationAction(messageInfo) {
+            dispatch(confirmInvitationAction(messageInfo));
         }
     }
 }

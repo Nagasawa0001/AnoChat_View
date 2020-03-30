@@ -19,15 +19,8 @@ export function signinAction(form) {
 const initialState = {
     processing: false, //APIレスポンスの有無
     error: '',// 取得失敗時のエラーメッセージ
-    userInfo: {
-        loggedIn: false,
-        _csrf: '',
-        admin: false,
-        session: {
-            token: '',
-            expireDate: '',
-        }
-    }
+    loggedIn: false,
+    profile: {}
 }
 export function signinReducer(state = initialState, action) {
     switch (action.type) {
@@ -35,7 +28,7 @@ export function signinReducer(state = initialState, action) {
             return Object.assign({}, state, { processing: true })
 
         case SIGNIN_SUCCESS:
-            return Object.assign({}, state, { processing: false, userInfo: { loggedIn: true }});
+            return Object.assign({}, state, { processing: false, loggedIn: true, profile: action.userInfo });
 
         case SIGNIN_FAILURE:
             return Object.assign({}, state, { processing: false, error: action.error })
@@ -49,8 +42,8 @@ export function signinReducer(state = initialState, action) {
 const requestSignup = (form) => axios.post('http://localhost:8080/signin', form)
     .then((res) => {
         console.log(res);
-        const result = res.data;
-        return { result }
+        const userInfo = res.data;
+        return { userInfo }
     })
     .catch((error) => {
         console.log('error : ' + error);
@@ -58,15 +51,17 @@ const requestSignup = (form) => axios.post('http://localhost:8080/signin', form)
     })
 
 function* signin(context, action) {
-    console.log(action);
     var form = new URLSearchParams();
     form.append('email', action.form.email);
     form.append('password', action.form.password);
-    const { result, error } = yield call(requestSignup, form);
-    console.log(result);
-    if(result) {
-        yield put ({ type: SIGNIN_SUCCESS});
-        yield call (context.history.push('/projects'));
+    const { userInfo, error } = yield call(requestSignup, form);
+    console.log(userInfo);
+    if(userInfo) {
+        localStorage.setItem("profile", JSON.stringify(userInfo));
+        document.cookie = 'userId=' + userInfo.id;
+        document.cookie = 'JSESSIONID=' + userInfo.jsessionId;
+        yield put ({ type: SIGNIN_SUCCESS, userInfo});
+        yield call (context.history.push, '/projects');
     } else if(error) {
         yield put ({ type: SIGNIN_FAILURE, error: '予期せぬエラーが発生しました。開発者に連絡してください'})
     } else {

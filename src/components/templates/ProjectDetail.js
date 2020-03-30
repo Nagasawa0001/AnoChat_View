@@ -1,124 +1,172 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import '../../assets/ProjectDetail.css';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Chip from '@material-ui/core/Chip';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import MailIcon from '@material-ui/icons/Mail';
+import MenuIcon from '@material-ui/icons/Menu';
+import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { withStyles, useTheme } from '@material-ui/core/styles';
+import { render } from '@testing-library/react';
+import { Paper } from '@material-ui/core';
 
-const styles = (theme) => ({
-    root: {
-      display: 'flex',
-      minHeight: 570,
-      justifyContent: 'center',
-    },
-    details: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    content: {
-      flex: '1 0 auto',
-    },
-    cover: {
-      width: 151,
-    },
-    controls: {
-      display: 'flex',
-      alignItems: 'center',
-      paddingLeft: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-    },
-    playIcon: {
-      height: 38,
-      width: 38,
-    },
-    categoryChips: {
-        margin: 5,
-        background: '#f5deb3',
-    },
-    languageChips: {
-        margin: 5,
-        background: '#ffe4e1',
-    },
-    chips: {
-        marginTop: 15,
-        marginBottom: 15,
-    },
-    content2: {
-        display: 'flex',
-    },
-    administrator: {
-        marginRight: 15,
-        color: 'red',
-    },
-    requireNumber: {
-        marginRight: 15,
-        color: 'red',
+const drawerWidth = 240;
 
+const styles = theme => ({
+  root: {
+    display: 'flex',
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
     },
-    currentNumber: {
-        marginRight: 15,
-        color: 'red',
+  },
+  appBar: {
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
     },
-    discription: {
-        margin: 50,
-        maxWidth: 550,
-        textAlign: 'left'
-    }
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
+  // necessary for content to be below app bar
+  toolbar: theme.mixins.toolbar,
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
 });
 
-class TopicDetail extends React.Component {
-
-    handleToProjectList = () => {
-        this.props.history.push('/project');
+class ProjectDetail extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mobileOpen: false
     }
+  }
 
-    render() {
-        const { classes } = this.props;
-        return (
-            <Card className={classes.root}>
-            <div className={classes.details}>
-              <CardContent className={classes.content}>
-                <Typography component="h2" variant="h2">
-                  Live From Space
-                </Typography>
-                <div className={classes.chips}>
-                <Chip className={classes.categoryChips} label="ああああああああああああ" />
-                <Chip className={classes.languageChips} label="Basic" />
-                </div>
-                <div className={classes.content2}>
-                管理/作成者：
-                <Typography className={classes.administrator} variant="p" color="textSecondary">
-                  Mac Miller
-                </Typography>
-                募集：
-                <Typography className={classes.requireNumber} variant="p" color="textSecondary">
-                  5人
-                </Typography>
-                参加：
-                <Typography className={classes.currentNumber} variant="p" color="textSecondary">
-                  2人
-                </Typography>
-                </div>
-                <div className={classes.discription}>
-                <Typography  variant="subtitle1" color="textSecondary">
-                あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ
-                </Typography>
-                </div>
-              </CardContent>
-              <div className={classes.controls}>
-      <ButtonGroup variant="contained">
-        <Button color="primary" className="select-btn">参加申請</Button>
-        <Button color="secondary" className="select-btn" onClick={this.handleToProjectList}>前ページへ戻る</Button>
-      </ButtonGroup>
-              </div>
-            </div>
-          </Card>
-        );
-    }
+  render() {
+    const { container } = this.props;
+    const { classes } = this.props;
+    return (
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              Responsive drawer
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              open={this.state.mobileOpen}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              <List>
+                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                  <ListItem button key={text}>
+                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}ß
+              </List>
+              <Divider />
+              <List>
+                {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                  <ListItem button key={text}>
+                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
+              </List>
+
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              variant="permanent"
+              open
+            >
+              <div className={classes.toolbar} />
+              <Divider />
+              <List>
+                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                  <ListItem button key={text}>
+                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
+              </List>
+              <Divider />
+              <List>
+                {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                  <ListItem button key={text}>
+                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
+              </List>
+
+            </Drawer>
+          </Hidden>
+        </nav>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          <Paper >
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+            ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
+            facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
+            gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
+            donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
+            adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
+            Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
+            imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
+            arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
+            donec massa sapien faucibus et molestie ac.
+          </Paper>
+        </main>
+      </div>
+    )
+  }
 }
 
-export default withStyles(styles)(withRouter(TopicDetail));
+
+export default withStyles(styles)(withRouter(ProjectDetail));

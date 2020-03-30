@@ -40,7 +40,10 @@ export function projectDetailReducer(state = secondState, action) {
 }
 
 // 【Middleware】////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const requestGetProjectDetail = (projectId) => axios.get('http://localhost:8080/project/detail?id=' + projectId)
+const requestGetProjectDetail = (projectId) => axios.get('http://localhost:8080/project?id=' + projectId,
+    {
+        withCredentials: true
+    })
 .then((res) => {
     const projectDetail = res.data;
     return { projectDetail }
