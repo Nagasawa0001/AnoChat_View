@@ -15,9 +15,9 @@ import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { withStyles, useTheme } from '@material-ui/core/styles';
-import { render } from '@testing-library/react';
+import { withStyles} from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
 const drawerWidth = 240;
 
@@ -151,16 +151,20 @@ class ProjectDetail extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Paper >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-            facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-            gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-            donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-            adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-            Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-            imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-            arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-            donec massa sapien faucibus et molestie ac.
+          <Typography>タイトル</Typography>
+          <Typography>説明文</Typography>
+          <Typography>参加人数</Typography>
+          <Typography>総親タスク数 + 未完了タスク数</Typography>
+          <Typography>進捗率(%) + 進捗バー</Typography>
+          </Paper>
+          <IconButton>
+              <AddIcon />
+            </IconButton>
+          <Paper >
+          <Typography>親タスクタイトル</Typography>
+          <Typography>担当者</Typography>
+          <Typography>総親タスク数 + 未完了タスク数</Typography>
+          <Typography>完了期日</Typography>
           </Paper>
         </main>
       </div>
