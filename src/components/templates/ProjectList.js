@@ -1,6 +1,21 @@
 import React from 'react';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form'
+import getJSESSION from '../../common';
+import renderTextField from '../atoms/TextField';
+import { getProjectDetailAction } from '../../modules/ProjectDetail';
+import { searchProjectAction, confirmInvitationAction, getProjectListAction } from '../../modules/ProjectList';
+
 import '../../assets/ProjectList.css';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
+import MenuIcon from '@material-ui/icons/Menu';
+import { Paper } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -10,54 +25,52 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Badge from '@material-ui/core/Badge';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Divider from '@material-ui/core/Divider';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { withStyles } from '@material-ui/core/styles';
-import { connect } from 'react-redux';
-import { getProjectListAction } from '../../modules/ProjectList';
-import { getProjectDetailAction } from '../../modules/ProjectDetail';
-import HomeIcon from '@material-ui/icons/Home';
-import getJSESSION from '../../common';
-import Button from '@material-ui/core/Button';
-import { Field, reduxForm } from 'redux-form'
-import renderTextField from '../atoms/TextField';
-import { searchProjectAction } from '../../modules/ProjectList';
-import { confirmInvitationAction } from '../../modules/ProjectList';
 
 
+const drawerWidth = 240;
 
 const styles = theme => ({
     root: {
-        width: '100%',
-        maxWidth: 250,
-        maxHeight: 350,
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: 10,
+        display: 'flex',
     },
-    grow: {
-        flexGrow: 1,
-        marginBottom: 30,
+    drawer: {
+        [theme.breakpoints.up('sm')]: {
+            width: drawerWidth,
+            flexShrink: 0,
+        },
+    },
+    appBar: {
+        [theme.breakpoints.up('sm')]: {
+            width: `calc(100% - ${drawerWidth}px)`,
+            marginLeft: drawerWidth,
+        },
     },
     menuButton: {
         marginRight: theme.spacing(2),
-    },
-    title: {
-        display: 'none',
         [theme.breakpoints.up('sm')]: {
-            display: 'block',
+            display: 'none',
         },
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+        width: drawerWidth,
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
     },
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
+        backgroundColor: fade(theme.palette.common.white, 0.35),
         '&:hover': {
             backgroundColor: fade(theme.palette.common.white, 0.25),
         },
@@ -65,81 +78,19 @@ const styles = theme => ({
         marginLeft: 0,
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(3),
+            marginLeft: theme.spacing(1),
             width: 'auto',
         },
     },
-    searchIcon: {
-        width: theme.spacing(7),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    inputRoot: {
-        color: 'inherit',
-    },
-    inputInput: {
-        padding: theme.spacing(1, 1, 1, 7),
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: 200,
-        },
-    },
-    sectionDesktop: {
-        display: 'none',
-        [theme.breakpoints.up('md')]: {
-            display: 'flex',
-        },
-    },
-    sectionMobile: {
-        display: 'flex',
-        [theme.breakpoints.up('md')]: {
-            display: 'none',
-        },
-    },
-    card: {
-        width: 800,
-        maxHeight: 200,
-        margin: 10,
-        borderRadius: 5,
-    },
-    media: {
-        height: 120,
-    },
-
-    cardList: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        marginLeft: 30,
-    },
-    main: {
-        display: 'flex',
-    },
-    projectTitle: {
-        fontWeight: 'bold',
-    },
-    metaInfo: {
-        marginTop: 55,
-    },
-
-    appbar: {
-        background: '#deb887',
-    },
-    button: {
-        background: 'red'
-    },
-    cardBorder: {
-        border: 5,
-    }
-
 });
 
-
 class projectList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            mobileOpen: false
+        }
+    }
 
     componentDidMount() {
         var sessionInfo = getJSESSION();
@@ -168,27 +119,28 @@ class projectList extends React.Component {
         this.props.confirmInvitationAction(messageInfo);
     }
 
+
     render() {
-        const { classes, handleSubmit } = this.props;
-        this.props.change("userId", getJSESSION().userId);
+        const { classes } = this.props;
         return (
-            <div>
-                <div className={classes.grow}>
-                    <AppBar position='static' className={classes.appbar}>
-                        <Toolbar>
-                            <IconButton
-                                edge='start'
-                                className={classes.menuButton}
-                                color='inherit'
-                                aria-label='open drawer'
-                            >
-                                <HomeIcon />
-                            </IconButton>
-                            <Typography className={classes.title} variant='h6' noWrap>
-                                PROJECT
-                            </Typography>
-                            <div className={classes.search}>
-                                <form onSubmit={handleSubmit(this.submit.bind(this))}>
+            <div className={classes.root}>
+                <CssBaseline />
+                <AppBar position="fixed" className={classes.appBar}>
+                    <Toolbar>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="start"
+                            className={classes.menuButton}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6" noWrap>
+                            PROJECT
+            </Typography>
+            <SearchIcon />
+            <div className={classes.search}>
+                                <form onSubmit=''>
                                     <Field
                                         placeholder='トピック名で検索...'
                                         classes={{
@@ -201,19 +153,8 @@ class projectList extends React.Component {
                                     />
                                 </form>
                             </div>
-                            <div className={classes.grow} />
-                            <div className={classes.sectionDesktop}>
-                                <IconButton aria-label='show 4 new mails' color='inherit'>
-                                    <Badge badgeContent={4} color='secondary'>
-                                        <MailIcon />
-                                    </Badge>
-                                </IconButton>
-                                <IconButton aria-label='show 17 new notifications' color='inherit'>
-                                    <Badge badgeContent={17} color='secondary'>
-                                        <NotificationsIcon />
-                                    </Badge>
-                                </IconButton>
-                                <IconButton
+                            <div className={classes.grow}>
+                            <IconButton
                                     edge='end'
                                     aria-label='account of current user'
                                     aria-controls=''
@@ -221,80 +162,79 @@ class projectList extends React.Component {
                                     onClick=''
                                     color='inherit'
                                 >
-                                    <AccountCircle />
+                                    <AccountCircle style={{ fontSize: 30 }}/>
                                 </IconButton>
-                            </div>
-                            <div className={classes.sectionMobile}>
-                                <IconButton
-                                    aria-label='show more'
-                                    aria-controls=''
-                                    aria-haspopup='true'
-                                    onClick=''
-                                    color='inherit'
-                                >
-                                    <MoreIcon />
-                                </IconButton>
-                            </div>
-                        </Toolbar>
-                    </AppBar>
-                </div>
-                <div className={classes.main}>
-                    <div className={classes.root}>
-                        <List component='nav' aria-label='main mailbox folders'>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <ListItemText primary='■ Invitation Message' />
-                                </ListItemIcon>
+                                </div>
+                    </Toolbar>
+                </AppBar>
+                <nav className={classes.drawer} aria-label="mailbox folders">
+                    {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+                    <Hidden xsDown implementation="css">
+                        <Drawer
+                            classes={{
+                                paper: classes.drawerPaper,
+                            }}
+                            variant="permanent"
+                            open
+                        >
+                            <div className={classes.toolbar} />
+                            <Divider />
+                            <List>
+                            <ListItem >
+                                <ListItemIcon><MailIcon /></ListItemIcon>
+                                <ListItemText primary='Invitation Box' />
                             </ListItem>
-                        </List>
-                        <div className={classes.root}>
-                            <List component='nav' aria-label='main mailbox folders'>
-                                <Divider />
                                 {
                                     this.props.messageList.map((message) =>
-                                        message.confirmed ? '' :
-                                            <div className={classes.cardBorder}>
-                                                <ListItem >
-                                                    <Typography className={classes.title} variant='p' noWrap>
-                                                        PROJECT :
-                                </Typography>
+                                    message.confirmed ? '' :
+                                        <div className={classes.cardBorder}>
+                                            <ListItem >
+                                                <Typography  variant='p' noWrap>
+                                                    PROJECT :
+                                                </Typography>
                                                     <ListItemText key={message.id} inset primary={message.messageTitle} />
-                                                </ListItem>
-                                                <ListItem >
-                                                    <Typography className={classes.title} variant='p' noWrap>
-                                                        TITLE :
-                                </Typography>
-                                                    <ListItemText key={message.id} inset primary={message.messageTitle} />
-                                                </ListItem>
-                                                <ListItem >
-                                                    <Typography className={classes.title} variant='p' noWrap>
-                                                        CONTENT :
-                                </Typography>
-                                                    <ListItemText key={message.id} inset primary={message.content} />
-                                                </ListItem>
-                                                <ListItem >
-                                                    <Typography className={classes.title} variant='p' noWrap>
-                                                        CREATEDDTE :
-                                </Typography>
-                                                    <ListItemText key={message.id} inset primary={message.createdDate} />
-                                                </ListItem>
-                                                <Button
-                                                    fullWidth
-                                                    variant="contained"
-                                                    color="primary"
-                                                    onClick={this.confirmInvitation.bind(this, message.id, message.toUserId, message.projectId)}
-                                                >
-                                                    Join
-                                </Button>
-                                                <Divider />
-                                            </div>
-                                    )
-
+                                            </ListItem>
+                                            <ListItem >
+                                                <Typography variant='p' noWrap>
+                                                      TITLE :
+                                                </Typography>
+                                                <ListItemText key={message.id} inset primary={message.messageTitle} />
+                                            </ListItem>
+                                            <ListItem >
+                                                <Typography variant='p' noWrap>
+                                                      CONTENT :
+                                                </Typography>
+                                                <ListItemText key={message.id} inset primary={message.content} />
+                                            </ListItem>
+                                            <ListItem >
+                                                <Typography variant='p' noWrap>
+                                                      CREATEDDTE :
+                                                </Typography>
+                                                <ListItemText key={message.id} inset primary={message.createdDate} />
+                                            </ListItem>
+                                            <Button
+                                                fullWidth
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={this.confirmInvitation.bind(this, message.id, message.toUserId, message.projectId)}
+                                            >
+                                                  Join
+                                            </Button>
+                                            <Divider />
+                                          </div>
+                                  )
                                 }
-                            </List>
-                        </div>
-                    </div>
-                    <div className={classes.cardList}>
+                             </List>
+                            <Divider />
+                        </Drawer>
+                    </Hidden>
+                </nav>
+                <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <IconButton>
+              <AddIcon />Create Project
+            </IconButton>
+                    <Paper >
                         {
                             this.props.projectList.map((project) =>
                                 <Card className={classes.card} key={project.id}>
@@ -315,10 +255,10 @@ class projectList extends React.Component {
                                 </Card>
                             )
                         }
-                    </div>
-                </div>
+                    </Paper>
+                </main>
             </div>
-        );
+        )
     }
 }
 

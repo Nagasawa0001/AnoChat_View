@@ -2,16 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import { all } from 'redux-saga/effects';
+import createSagaMiddleware from 'redux-saga'
+import { Router, Switch, Route } from 'react-router-dom';
+import { createLogger } from 'redux-logger';
+import createHistory from 'history/createBrowserHistory';
+import { Redirect } from 'react-router-dom'
+
 import { projectListSagas } from './modules/ProjectList';
 import { projectDetailSagas } from './modules/ProjectDetail';
 import { signupTempSagas } from './modules/SignupTemp';
 import { signupSagas } from './modules/Signup';
 import { signinSagas } from './modules/Signin';
 import rootReducers from './modules/allReducers';
-import { createStore, applyMiddleware } from 'redux';
-import { all } from 'redux-saga/effects';
-import createSagaMiddleware from 'redux-saga'
-import { Router, Switch, Route } from 'react-router-dom';
+
 import ProjectList from './components/templates/ProjectList';
 import Top from './components/templates/Top';
 import SignupTemp from './components/templates/SignupTemp';
@@ -19,10 +24,9 @@ import Signin from './components/templates/Signin';
 import Signup from './components/templates/Signup';
 import InputEmail from './components/templates/InputEmail';
 import ProjectDetail from './components/templates/ProjectDetail';
-import { createLogger } from 'redux-logger';
-import createHistory from 'history/createBrowserHistory';
 import InputPassword from './components/templates/InputPassword';
-import { Redirect } from 'react-router-dom'
+import ParentTaskDetail from './components/templates/ParentTaskDetail';
+import ChildTaskDetail from './components/templates/ChildTaskDetail';
 
 const allSagas = [
     ...projectListSagas, 
@@ -56,6 +60,8 @@ class App extends React.Component {
                         <Route exact path={'/reset/password'} component={InputPassword} />
                         <Route exact path={'/projects'} render={() => ( this.props ? ( <ProjectList /> ) : ( <Redirect to={'/signin'} /> ))} />
                         <Route exact path={'/project/:id'} component={ProjectDetail} />
+                        <Route exact path={'/task/parent/:id'} component={ParentTaskDetail} />
+                        <Route exact path={'/task/child/:id'} component={ChildTaskDetail} />
                     </Switch>
                 </Provider>
     </Router>

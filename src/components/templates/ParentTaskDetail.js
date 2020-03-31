@@ -78,7 +78,7 @@ const styles = theme => ({
 },
 });
 
-class ProjectDetail extends React.Component {
+class ParentTaskDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -102,7 +102,7 @@ class ProjectDetail extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-                            PARENT TASK
+                            CHILD TASK
             </Typography>
             <SearchIcon />
             <div className={classes.search}>
@@ -191,9 +191,9 @@ class ProjectDetail extends React.Component {
   }
 }
 
-ProjectDetail = reduxForm({
-  form: 'ProjectDetail'
-})(ProjectDetail)
+ParentTaskDetail = reduxForm({
+  form: 'ParentTaskDetail'
+})(ParentTaskDetail)
 
 
-export default withStyles(styles)(withRouter(ProjectDetail));
+export default withStyles(styles)(withRouter(ParentTaskDetail));
