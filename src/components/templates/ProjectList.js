@@ -82,15 +82,15 @@ const styles = theme => ({
             width: 'auto',
         },
     },
+    messageButton: {
+        width: 80
+    },
+    messageFrame: {
+        marginBottom: 10
+    }
 });
 
 class projectList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            mobileOpen: false
-        }
-    }
 
     componentDidMount() {
         var sessionInfo = getJSESSION();
@@ -122,6 +122,7 @@ class projectList extends React.Component {
 
     render() {
         const { classes } = this.props;
+        console.log(this.props);
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -187,32 +188,31 @@ class projectList extends React.Component {
                                 {
                                     this.props.messageList.map((message) =>
                                     message.confirmed ? '' :
-                                        <div className={classes.cardBorder}>
-                                            <ListItem >
-                                                <Typography  variant='p' noWrap>
-                                                    PROJECT :
+                                    <div className={classes.messageFrame}>
+                                        <Divider />
+                                        <List >
+                                            <ListItem key={message.id} >
+                                                <Typography  variant='caption'>
+                                                    PROJECT :{message.messageTitle}
                                                 </Typography>
-                                                    <ListItemText key={message.id} inset primary={message.messageTitle} />
-                                            </ListItem>
-                                            <ListItem >
-                                                <Typography variant='p' noWrap>
-                                                      TITLE :
+                                                </ListItem>
+                                                <ListItem key={message.id} >
+                                                <Typography variant='caption' noWrap>
+                                                      TITLE :{message.messageTitle}
                                                 </Typography>
-                                                <ListItemText key={message.id} inset primary={message.messageTitle} />
-                                            </ListItem>
-                                            <ListItem >
-                                                <Typography variant='p' noWrap>
-                                                      CONTENT :
+                                                </ListItem>
+                                                <ListItem key={message.id} >
+                                                <Typography variant='caption' noWrap>
+                                                      CONTENT :{message.content}
                                                 </Typography>
-                                                <ListItemText key={message.id} inset primary={message.content} />
-                                            </ListItem>
-                                            <ListItem >
-                                                <Typography variant='p' noWrap>
-                                                      CREATEDDTE :
+                                                </ListItem>
+                                                <ListItem key={message.id} >
+                                                <Typography variant='caption' noWrap>
+                                                      CREATEDDTE :{message.createdDate}
                                                 </Typography>
-                                                <ListItemText key={message.id} inset primary={message.createdDate} />
                                             </ListItem>
                                             <Button
+                                            className={classes.messageButton}
                                                 fullWidth
                                                 variant="contained"
                                                 color="primary"
@@ -220,8 +220,8 @@ class projectList extends React.Component {
                                             >
                                                   Join
                                             </Button>
-                                            <Divider />
-                                          </div>
+                                            </List>
+                                            </div>
                                   )
                                 }
                              </List>

@@ -102,7 +102,7 @@ class ParentTaskDetail extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-                            CHILD TASK
+                            PARENT TASK
             </Typography>
             <SearchIcon />
             <div className={classes.search}>

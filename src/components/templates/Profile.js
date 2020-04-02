@@ -78,10 +78,12 @@ const styles = theme => ({
 },
 });
 
-class ProjectDetail extends React.Component {
-  
-  handleToProjectList() {
-    this.props.history.push('/projects');
+class Profile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mobileOpen: false
+    }
   }
 
   render() {
@@ -100,7 +102,7 @@ class ProjectDetail extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-                            PARENT TASK
+                            Task Register
             </Typography>
             <SearchIcon />
             <div className={classes.search}>
@@ -142,11 +144,11 @@ class ProjectDetail extends React.Component {
               <div className={classes.toolbar} />
               <Divider />
               <List>
-                <ListItem button >
+                <ListItem button>
                   <ListItemIcon><PeopleAltIcon /></ListItemIcon>
                   <ListItemText primary='Member List' />
                 </ListItem>
-                <ListItem button onClick={this.handleToProjectList.bind(this)}>
+                <ListItem button>
                   <ListItemIcon><WorkIcon /></ListItemIcon>
                   <ListItemText primary='Project List' />
                 </ListItem>
@@ -189,9 +191,9 @@ class ProjectDetail extends React.Component {
   }
 }
 
-ProjectDetail = reduxForm({
-  form: 'ProjectDetail'
-})(ProjectDetail)
+Profile = reduxForm({
+  form: 'Profile'
+})(Profile)
 
 
-export default withStyles(styles)(withRouter(ProjectDetail));
+export default withStyles(styles)(withRouter(Profile));

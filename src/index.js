@@ -8,7 +8,6 @@ import createSagaMiddleware from 'redux-saga'
 import { Router, Switch, Route } from 'react-router-dom';
 import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
-import { Redirect } from 'react-router-dom'
 
 import { projectListSagas } from './modules/ProjectList';
 import { projectDetailSagas } from './modules/ProjectDetail';
@@ -27,6 +26,9 @@ import ProjectDetail from './components/templates/ProjectDetail';
 import InputPassword from './components/templates/InputPassword';
 import ParentTaskDetail from './components/templates/ParentTaskDetail';
 import ChildTaskDetail from './components/templates/ChildTaskDetail';
+import Profile from './components/templates/Profile';
+import TaskRegister from './components/templates/TaskRegister';
+import ProjectRegister from './components/templates/ProjectRegister';
 
 const allSagas = [
     ...projectListSagas, 
@@ -58,10 +60,13 @@ class App extends React.Component {
                         <Route exact path={'/signin'} component={Signin} />
                         <Route exact path={'/reset/email'} component={InputEmail} />
                         <Route exact path={'/reset/password'} component={InputPassword} />
-                        <Route exact path={'/projects'} render={() => ( this.props ? ( <ProjectList /> ) : ( <Redirect to={'/signin'} /> ))} />
+                        <Route exact path={'/profile'} component={Profile} />
+                        <Route exact path={'/projects'} component={ProjectList} />
                         <Route exact path={'/project/:id'} component={ProjectDetail} />
                         <Route exact path={'/task/parent/:id'} component={ParentTaskDetail} />
                         <Route exact path={'/task/child/:id'} component={ChildTaskDetail} />
+                        <Route exact path={'/task/create'} component={TaskRegister} />
+                        <Route exact path={'/project/create'} component={ProjectRegister} />
                     </Switch>
                 </Provider>
     </Router>
