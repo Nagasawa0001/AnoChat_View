@@ -1,0 +1,33 @@
+{
+    "processing": true,
+    "error": "",
+    "categoryInfo": {
+        "categoryList": []
+    },
+    "languageInfo": {
+        "languageList": []
+    },
+    "projectInfo": {
+        "projectList": [],
+        "projectDetail": {
+            "project": "",
+            "category": "",
+            "language": "",
+            "memberList": [],
+            "commentList": []
+        }
+    },
+    "userInfo": {
+        "userList": [],
+        "user": "",
+        "session": {
+            "loggedIn": true,
+            "token": "",
+            "expireDate": ""
+        }
+    },
+    "adminInfo": {
+        "adminList": [],
+        "adminDetail": ""
+    }
+}

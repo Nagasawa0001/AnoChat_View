@@ -1,24 +1,22 @@
 body {
     text-align: center;
     padding: 30px;
-    background:#f5deb3;
 }
 
 .title {
-    font-size: 150px;
+    font-size: 90px;
     font-weight: bold;
-    color: white;
 }
 
 .discription {
-    font-size: 60px;
-    color: white;
+    font-size: 40px;
     font-weight: bold;
+    margin: 100px;
 }
 
 .start-btn {
     height: 50px;
-    width: 200px;
+    width: 350px;
 }
 
 h3 {

@@ -2,15 +2,17 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import Button from '@material-ui/core/Button';
 import '../../assets/Top.css';
-import { connect } from 'react-redux';
-import { getProjectListAction } from '../../modules/ProjectList';
 
 
 class Top extends React.Component {
 
 
-    handleToTopicList = () => {
-        this.props.history.push('/project');
+    handleToSignin = () => {
+        this.props.history.push('/signin');
+    }
+
+    handleToSignup = () => {
+        this.props.history.push('/signup');
     }
 
     render() {
@@ -18,26 +20,13 @@ class Top extends React.Component {
             <div>
                 
                 <h1 className="title">CoopLab</h1>
-                <p className="discription">Easy Co-op Development</p>
-                <Button className="start-btn" variant="contained" onClick={this.handleToTopicList}>Get Started</Button>
+                <p className="discription">Easy Task Management!</p>
+                <Button color="primary" className="start-btn" variant="contained" onClick={this.handleToSignin}>Signin</Button>
+                <Button color="secondary" className="start-btn" variant="contained" onClick={this.handleToSignup}>Signup</Button>
                 <h3>{this.props.error}</h3>
             </div>
         )
     }
 }
 
-function mapStateToProps({ error }) {
-    return {
-        error
-    }
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        getProjectListAction(meta) {
-            dispatch(getProjectListAction(meta));
-        }
-    }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Top));
+export default withRouter(Top);
