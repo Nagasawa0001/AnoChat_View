@@ -2,6 +2,8 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
+import { connect } from 'react-redux';
+import { getParentTaskDetailAction } from '../../modules/ParentTaskDetail';
 
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
@@ -66,26 +68,31 @@ const styles = theme => ({
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.35),
     '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
+      backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     marginRight: theme.spacing(2),
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(1),
-        width: 'auto',
+      marginLeft: theme.spacing(1),
+      width: 'auto',
     },
-},
+  },
 });
 
 class ProjectDetail extends React.Component {
-  
-  handleToProjectList() {
-    this.props.history.push('/projects');
+
+  componentDidMount() {
+
+  }
+
+  handleToParentTaskDetail(parentTaskId) {
+    this.props.getParentTaskDetailAction(parentTaskId);
   }
 
   render() {
     const { classes } = this.props;
+    console.log(this.props);
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -100,33 +107,33 @@ class ProjectDetail extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-                            PARENT TASK
+              PARENT TASK
             </Typography>
             <SearchIcon />
             <div className={classes.search}>
-                                <form onSubmit=''>
-                                    <Field
-                                        placeholder='トピック名で検索...'
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        component={renderTextField}
-                                        name='title'
-                                        id='title'
-                                    />
-                                </form>
-                            </div>
-                            <IconButton
-                                    edge='end'
-                                    aria-label='account of current user'
-                                    aria-controls=''
-                                    aria-haspopup='true'
-                                    onClick=''
-                                    color='inherit'
-                                >
-                                    <AccountCircle style={{ fontSize: 30 }}/>
-                                </IconButton>
+              <form onSubmit=''>
+                <Field
+                  placeholder='トピック名で検索...'
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  component={renderTextField}
+                  name='title'
+                  id='title'
+                />
+              </form>
+            </div>
+            <IconButton
+              edge='end'
+              aria-label='account of current user'
+              aria-controls=''
+              aria-haspopup='true'
+              onClick=''
+              color='inherit'
+            >
+              <AccountCircle style={{ fontSize: 30 }} />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <nav className={classes.drawer} aria-label="mailbox folders">
@@ -146,7 +153,7 @@ class ProjectDetail extends React.Component {
                   <ListItemIcon><PeopleAltIcon /></ListItemIcon>
                   <ListItemText primary='Member List' />
                 </ListItem>
-                <ListItem button onClick={this.handleToProjectList.bind(this)}>
+                <ListItem button onClick={this.handleToParentTaskDetail.bind(this)}>
                   <ListItemIcon><WorkIcon /></ListItemIcon>
                   <ListItemText primary='Project List' />
                 </ListItem>
@@ -166,23 +173,33 @@ class ProjectDetail extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Paper >
-            <Typography>タイトル</Typography>
-            <Typography>説明文</Typography>
-            <Typography>参加人数</Typography>
+            <Typography>{this.props.project.title}</Typography>
+            <Typography>{this.props.project.discription}</Typography>
+            <Typography><PeopleAltIcon fontSize='small' />{this.props.project.currentUser}人参加中</Typography>
             <Typography>総親タスク数 + 未完了タスク数</Typography>
             <Typography>進捗率(%) + 進捗バー</Typography>
           </Paper>
           <IconButton>
             <AddIcon />Create Task
           </IconButton>
-          <CardActionArea>
-          <Paper >
-            <Typography>親タスクタイトル</Typography>
-            <Typography>担当者</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
-            <Typography>完了期日</Typography>
-          </Paper>
-          </CardActionArea>
+              {
+                this.props.parentTaskList.map((parentTask) =>
+                  <Paper className={classes.card} key={parentTask.id}>
+                    <CardActionArea onClick={this.handleToParentTaskDetail.bind(this, parentTask.id)}>
+
+                      <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
+                        {parentTask.title}
+                      </Typography>
+                      <Typography gutterBottom variant='p' component='h2' >
+                        {parentTask.content}
+                      </Typography>
+                      <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
+                        CREATEDDATE:{parentTask.createdDate}
+                                            </Typography>
+                    </CardActionArea>
+                    </Paper>
+                )
+              }
         </main>
       </div>
     )
@@ -193,5 +210,19 @@ ProjectDetail = reduxForm({
   form: 'ProjectDetail'
 })(ProjectDetail)
 
+function mapStateToProps(store) {
+  return {
+    project: store.project.projectDetail.project,
+    parentTaskList: store.project.projectDetail.parentTasks
+  }
+}
 
-export default withStyles(styles)(withRouter(ProjectDetail));
+function mapDispatchToProps(dispatch) {
+  return {
+    getParentTaskDetailAction(parentTaskId) {
+          dispatch(getParentTaskDetailAction(parentTaskId));
+      }
+  }
+}
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectDetail)));

@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
-import renderTextField from '../atoms/TextField';
+import renderTextField from '../atoms/Select';
 
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
@@ -23,10 +23,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import CardActionArea from '@material-ui/core/CardActionArea';
-
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const drawerWidth = 240;
 
@@ -116,6 +118,7 @@ class ProjectRegister extends React.Component {
                                         component={renderTextField}
                                         name='title'
                                         id='title'
+                                        value='aaaa'
                                     />
                                 </form>
                             </div>
@@ -167,24 +170,57 @@ class ProjectRegister extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Paper >
-            <Typography>タイトル</Typography>
-            <Typography>説明文</Typography>
-            <Typography>参加人数</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
-            <Typography>進捗率(%) + 進捗バー</Typography>
-          </Paper>
-          <IconButton>
-            <AddIcon />Create Task
-          </IconButton>
-          <CardActionArea>
-          <Paper >
-            <Typography>親タスクタイトル</Typography>
-            <Typography>担当者</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
-            <Typography>完了期日</Typography>
-          </Paper>
-          </CardActionArea>
+          <Container component="main" maxWidth="xs">
+              {
+                this.props.processing ? (<CircularProgress color="secondary"/>) : ''
+              }
+            <CssBaseline />
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <AddCircleOutlineIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Create Project
+              </Typography>
+              <form >
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="title"
+                      label="title"
+                      name="title"
+                      autoComplete="title"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      name="discription"
+                      label="discription"
+                      type="discription"
+                      id="discription"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Sign Up
+                </Button>
+              </form>
+            </div>
+          </Container>
         </main>
       </div>
     )

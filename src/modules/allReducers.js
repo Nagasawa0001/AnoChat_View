@@ -5,6 +5,9 @@ import { reducer as reduxFormReducer } from 'redux-form';
 import { signupTempReducer } from './SignupTemp';
 import { signupReducer } from './Signup';
 import { signinReducer } from './Signin';
+import { parentTaskDetailReducer } from './ParentTaskDetail';
+import { childTaskDetailReducer } from './ChildTaskDetail';
+import { registerReducer } from './Register';
 
 export default combineReducers({
     projectInfo: projectListReducer,
@@ -13,4 +16,7 @@ export default combineReducers({
     signupTemp: signupTempReducer,
     signup: signupReducer, 
     userInfo: signinReducer,
+    parentTask: parentTaskDetailReducer,
+    childTask: childTaskDetailReducer,
+    register: registerReducer
 });

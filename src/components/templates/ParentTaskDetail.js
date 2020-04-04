@@ -2,6 +2,9 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
+import { getChildTaskDetailAction } from '../../modules/ChildTaskDetail';
+import { connect } from 'react-redux';
+
 
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
@@ -86,6 +89,14 @@ class ParentTaskDetail extends React.Component {
     }
   }
 
+  handleToChildTaskDetail(childTaskId) {
+    this.props.getChildTaskDetailAction(childTaskId);
+  }
+
+  handleToTaskRegister() {
+    this.props.history.push('/create/task');
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -168,23 +179,34 @@ class ParentTaskDetail extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Paper >
-            <Typography>タイトル</Typography>
-            <Typography>説明文</Typography>
+            <Typography>{this.props.parentTask.title}</Typography>
+            <Typography>{this.props.parentTask.content}</Typography>
             <Typography>参加人数</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
+            <Typography>子タスク　完了済： </Typography>
+            <Typography>子タスク　未完了： </Typography>
             <Typography>進捗率(%) + 進捗バー</Typography>
           </Paper>
-          <IconButton>
+          <IconButton onClick={this.handleToTaskRegister.bind(this)}>
             <AddIcon />Create Task
           </IconButton>
-          <CardActionArea>
-          <Paper >
-            <Typography>親タスクタイトル</Typography>
-            <Typography>担当者</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
-            <Typography>完了期日</Typography>
-          </Paper>
-          </CardActionArea>
+          {
+                this.props.childTaskList.map((childTask) =>
+                  <Paper className={classes.card} key={childTask.id}>
+                    <CardActionArea onClick={this.handleToChildTaskDetail.bind(this, childTask.id)}>
+
+                      <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
+                        {childTask.title}
+                      </Typography>
+                      <Typography gutterBottom variant='p' component='h2' >
+                        {childTask.content}
+                      </Typography>
+                      <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
+                        CREATEDDATE:{childTask.createdDate}
+                                            </Typography>
+                    </CardActionArea>
+                    </Paper>
+                )
+              }
         </main>
       </div>
     )
@@ -195,5 +217,21 @@ ParentTaskDetail = reduxForm({
   form: 'ParentTaskDetail'
 })(ParentTaskDetail)
 
+function mapStateToProps(store) {
+  console.log(store.parentTask);
+  return {
+    parentTask: store.parentTask.parentTask,
+    childTaskList: store.parentTask.childTaskList
+  }
+}
 
-export default withStyles(styles)(withRouter(ParentTaskDetail));
+function mapDispatchToProps(dispatch) {
+  return {
+    getChildTaskDetailAction(childTaskId) {
+          dispatch(getChildTaskDetailAction(childTaskId));
+      }
+  }
+}
+
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(ParentTaskDetail)));

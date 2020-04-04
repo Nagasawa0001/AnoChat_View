@@ -14,6 +14,9 @@ import { projectDetailSagas } from './modules/ProjectDetail';
 import { signupTempSagas } from './modules/SignupTemp';
 import { signupSagas } from './modules/Signup';
 import { signinSagas } from './modules/Signin';
+import { parentTaskSagas } from './modules/ParentTaskDetail';
+import { childTaskSagas } from './modules/ChildTaskDetail';
+import { registerSagas } from './modules/Register';
 import rootReducers from './modules/allReducers';
 
 import ProjectList from './components/templates/ProjectList';
@@ -26,7 +29,6 @@ import ProjectDetail from './components/templates/ProjectDetail';
 import InputPassword from './components/templates/InputPassword';
 import ParentTaskDetail from './components/templates/ParentTaskDetail';
 import ChildTaskDetail from './components/templates/ChildTaskDetail';
-import Profile from './components/templates/Profile';
 import TaskRegister from './components/templates/TaskRegister';
 import ProjectRegister from './components/templates/ProjectRegister';
 
@@ -35,7 +37,10 @@ const allSagas = [
     ...projectDetailSagas, 
     ...signupTempSagas, 
     ...signupSagas, 
-    ...signinSagas
+    ...signinSagas,
+    ...parentTaskSagas,
+    ...childTaskSagas,
+    ...registerSagas,
 ];
 
 function* rootSaga(context) {
@@ -60,13 +65,12 @@ class App extends React.Component {
                         <Route exact path={'/signin'} component={Signin} />
                         <Route exact path={'/reset/email'} component={InputEmail} />
                         <Route exact path={'/reset/password'} component={InputPassword} />
-                        <Route exact path={'/profile'} component={Profile} />
                         <Route exact path={'/projects'} component={ProjectList} />
                         <Route exact path={'/project/:id'} component={ProjectDetail} />
                         <Route exact path={'/task/parent/:id'} component={ParentTaskDetail} />
                         <Route exact path={'/task/child/:id'} component={ChildTaskDetail} />
-                        <Route exact path={'/task/create'} component={TaskRegister} />
-                        <Route exact path={'/project/create'} component={ProjectRegister} />
+                        <Route exact path={'/create/task'} component={TaskRegister} />
+                        <Route exact path={'/create/project'} component={ProjectRegister} />
                     </Switch>
                 </Provider>
     </Router>

@@ -119,6 +119,14 @@ class projectList extends React.Component {
         this.props.confirmInvitationAction(messageInfo);
     }
 
+    handleToProjectRegister(){
+        this.props.history.push('/create/project');
+    }
+
+    handleToProfile() {
+        this.props.history.push('/profile');
+    }
+
 
     render() {
         const { classes } = this.props;
@@ -160,7 +168,7 @@ class projectList extends React.Component {
                                     aria-label='account of current user'
                                     aria-controls=''
                                     aria-haspopup='true'
-                                    onClick=''
+                                    onClick={this.handleToProfile.bind(this)}
                                     color='inherit'
                                 >
                                     <AccountCircle style={{ fontSize: 30 }}/>
@@ -231,7 +239,7 @@ class projectList extends React.Component {
                 </nav>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    <IconButton>
+                    <IconButton onClick={this.handleToProjectRegister.bind(this)}>
               <AddIcon />Create Project
             </IconButton>
                     <Paper >

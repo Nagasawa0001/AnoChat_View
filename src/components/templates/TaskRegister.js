@@ -2,6 +2,10 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
+import renderSelect from '../atoms/Select';
+import { createTaskAction } from '../../modules/Register';
+import { connect } from 'react-redux';
+
 
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
@@ -23,9 +27,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import CardActionArea from '@material-ui/core/CardActionArea';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const drawerWidth = 240;
@@ -79,15 +86,14 @@ const styles = theme => ({
 });
 
 class TaskRegister extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mobileOpen: false
-    }
+
+  submit(form, dispatch) {
+    dispatch(createTaskAction(form));
   }
 
   render() {
-    const { classes } = this.props;
+    console.log(this.props);
+    const { classes, handleSubmit } = this.props;
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -167,24 +173,69 @@ class TaskRegister extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Paper >
-            <Typography>タイトル</Typography>
-            <Typography>説明文</Typography>
-            <Typography>参加人数</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
-            <Typography>進捗率(%) + 進捗バー</Typography>
-          </Paper>
-          <IconButton>
-            <AddIcon />Create Task
-          </IconButton>
-          <CardActionArea>
-          <Paper >
-            <Typography>親タスクタイトル</Typography>
-            <Typography>担当者</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
-            <Typography>完了期日</Typography>
-          </Paper>
-          </CardActionArea>
+          <Container component="main" maxWidth="xs">
+              {
+                this.props.processing ? (<CircularProgress color="secondary"/>) : ''
+              }
+            <CssBaseline />
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <AddCircleOutlineIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Create Task
+              </Typography>
+              <form  onSubmit={handleSubmit(this.submit.bind(this))}>
+                <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="taskType"
+                      label="taskType"
+                      name="taskType"
+                      autoComplete="taskType"
+                      component={renderSelect}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="title"
+                      label="title"
+                      name="title"
+                      autoComplete="title"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      name="content"
+                      label="content"
+                      type="content"
+                      id="content"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Create
+                </Button>
+              </form>
+            </div>
+          </Container>
         </main>
       </div>
     )
@@ -195,5 +246,13 @@ TaskRegister = reduxForm({
   form: 'TaskRegister'
 })(TaskRegister)
 
+function mapDispatchToProps(dispatch) {
+  return {
+    createTaskAction(form) {
+      dispatch(createTaskAction(form));
+    }
+  }
+}
 
-export default withStyles(styles)(withRouter(TaskRegister));
+
+export default withStyles(styles)(withRouter(connect(null, mapDispatchToProps)(TaskRegister)));

@@ -2,6 +2,8 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
+import { connect } from 'react-redux';
+
 
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
@@ -25,8 +27,6 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import CardActionArea from '@material-ui/core/CardActionArea';
-
 
 const drawerWidth = 240;
 
@@ -79,11 +79,9 @@ const styles = theme => ({
 });
 
 class ChildTaskDetail extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mobileOpen: false
-    }
+
+  handleToTaskRegister() {
+    this.props.history.push('/create/task');
   }
 
   render() {
@@ -168,23 +166,28 @@ class ChildTaskDetail extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Paper >
-            <Typography>タイトル</Typography>
-            <Typography>説明文</Typography>
+            <Typography>{this.props.childTask.title}</Typography>
+            <Typography>{this.props.childTask.content}</Typography>
             <Typography>参加人数</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
+            <Typography>子タスク　完了済： </Typography>
+            <Typography>子タスク　未完了： </Typography>
             <Typography>進捗率(%) + 進捗バー</Typography>
           </Paper>
-          <IconButton>
+          <IconButton onClick={this.handleToTaskRegister.bind(this)}>
             <AddIcon />Create Task
           </IconButton>
-          <CardActionArea>
-          <Paper >
-            <Typography>親タスクタイトル</Typography>
-            <Typography>担当者</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
-            <Typography>完了期日</Typography>
-          </Paper>
-          </CardActionArea>
+          {
+                this.props.taskCommentList.map((taskComment) =>
+                  <Paper className={classes.card} key={taskComment.id}>
+                      <Typography gutterBottom variant='p' component='h2' >
+                        {taskComment.content}
+                      </Typography>
+                      <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
+                        CREATEDDATE:{taskComment.createdDate}
+                                            </Typography>
+                    </Paper>
+                )
+              }
         </main>
       </div>
     )
@@ -196,4 +199,13 @@ ChildTaskDetail = reduxForm({
 })(ChildTaskDetail)
 
 
-export default withStyles(styles)(withRouter(ChildTaskDetail));
+function mapStateToProps(store) {
+  console.log(store.childTask);
+  return {
+    childTask: store.childTask.childTask,
+    taskCommentList: store.childTask.taskCommentList
+  }
+}
+
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, null)(ChildTaskDetail)));
