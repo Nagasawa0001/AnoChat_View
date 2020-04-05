@@ -29,7 +29,8 @@ import ProjectDetail from './components/templates/ProjectDetail';
 import InputPassword from './components/templates/InputPassword';
 import ParentTaskDetail from './components/templates/ParentTaskDetail';
 import ChildTaskDetail from './components/templates/ChildTaskDetail';
-import TaskRegister from './components/templates/TaskRegister';
+import ChildTaskRegister from './components/templates/ChildTaskRegister';
+import ParentTaskRegister from './components/templates/ParentTaskRegister';
 import ProjectRegister from './components/templates/ProjectRegister';
 
 const allSagas = [
@@ -69,7 +70,8 @@ class App extends React.Component {
                         <Route exact path={'/project/:id'} component={ProjectDetail} />
                         <Route exact path={'/task/parent/:id'} component={ParentTaskDetail} />
                         <Route exact path={'/task/child/:id'} component={ChildTaskDetail} />
-                        <Route exact path={'/create/task'} component={TaskRegister} />
+                        <Route exact path={'/create/task/parent'} component={ParentTaskRegister} />
+                        <Route exact path={'/create/task/child'} component={ChildTaskRegister} />
                         <Route exact path={'/create/project'} component={ProjectRegister} />
                     </Switch>
                 </Provider>

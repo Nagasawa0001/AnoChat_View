@@ -2,9 +2,9 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
-import { getChildTaskDetailAction } from '../../modules/ChildTaskDetail';
+import renderSelect from '../atoms/Select';
+import { createTaskAction } from '../../modules/Register';
 import { connect } from 'react-redux';
-import Button from '@material-ui/core/Button';
 
 
 import SearchIcon from '@material-ui/icons/Search';
@@ -27,14 +27,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import BlockIcon from '@material-ui/icons/Block';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const drawerWidth = 240;
@@ -87,22 +85,15 @@ const styles = theme => ({
 },
 });
 
-class ParentTaskDetail extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = { value: ''};
-  }
+class ParentTaskRegister extends React.Component {
 
-  handleToChildTaskDetail(childTaskId) {
-    this.props.getChildTaskDetailAction(childTaskId);
-  }
-
-  handleToParentTaskRegister() {
-    this.props.history.push('/create/task/parent');
+  submit(form, dispatch) {
+    dispatch(createTaskAction(form));
   }
 
   render() {
-    const { classes } = this.props;
+    console.log(this.props);
+    const { classes, handleSubmit } = this.props;
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -117,7 +108,7 @@ class ParentTaskDetail extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-                            PARENT TASK
+                            Parent Task Register
             </Typography>
             <SearchIcon />
             <div className={classes.search}>
@@ -181,76 +172,87 @@ class ParentTaskDetail extends React.Component {
           </Hidden>
         </nav>
         <main className={classes.content}>
-        <BottomNavigation
-      value={this.state.value}
-      onChange={(event, newValue) => {
-        this.setState({ value: newValue});
-      }}
-      showLabels
-      className={classes.aaa}
-    >
-      <BottomNavigationAction label="Done" icon={<DoneOutlineIcon />} />
-      <BottomNavigationAction label="Deleted" icon={<DeleteForeverIcon />} />
-      <BottomNavigationAction label="Canceled" icon={<BlockIcon />} />
-    </BottomNavigation>
           <div className={classes.toolbar} />
-          <Paper >
-          <Button color="primary" className="start-btn" variant="outlined" >Done</Button>
-          <Button color="secondary" className="start-btn" variant="outlined" >Delete</Button>
-          <Button color="default" className="start-btn" variant="outlined" >Cancel</Button>
-            <Typography>{this.props.parentTask.title}</Typography>
-            <Typography>{this.props.parentTask.content}</Typography>
-            <Typography>参加人数</Typography>
-            <Typography>子タスク　完了済： </Typography>
-            <Typography>子タスク　未完了： </Typography>
-            <Typography>進捗率(%) + 進捗バー</Typography>
-          </Paper>
-          <IconButton onClick={this.handleToParentTaskRegister.bind(this)}>
-            <AddIcon />Create Task
-          </IconButton>
-          {
-                this.props.childTaskList.map((childTask) =>
-                  <Paper className={classes.card} key={childTask.id}>
-                    <CardActionArea onClick={this.handleToChildTaskDetail.bind(this, childTask.id)}>
-
-                      <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
-                        {childTask.title}
-                      </Typography>
-                      <Typography gutterBottom variant='p' component='h2' >
-                        {childTask.content}
-                      </Typography>
-                      <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
-                        CREATEDDATE:{childTask.createdDate}
-                                            </Typography>
-                    </CardActionArea>
-                    </Paper>
-                )
+          <Container component="main" maxWidth="xs">
+              {
+                this.props.processing ? (<CircularProgress color="secondary"/>) : ''
               }
+            <CssBaseline />
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <AddCircleOutlineIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Create Parent Task
+              </Typography>
+              <form  onSubmit={handleSubmit(this.submit.bind(this))}>
+                <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="taskType"
+                      label="taskType"
+                      name="taskType"
+                      autoComplete="taskType"
+                      component={renderSelect}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="title"
+                      label="title"
+                      name="title"
+                      autoComplete="title"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      name="content"
+                      label="content"
+                      type="content"
+                      id="content"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Create
+                </Button>
+              </form>
+            </div>
+          </Container>
         </main>
       </div>
     )
   }
 }
 
-ParentTaskDetail = reduxForm({
-  form: 'ParentTaskDetail'
-})(ParentTaskDetail)
-
-function mapStateToProps(store) {
-  console.log(store.parentTask);
-  return {
-    parentTask: store.parentTask.parentTask,
-    childTaskList: store.parentTask.childTaskList
-  }
-}
+ParentTaskRegister = reduxForm({
+  form: 'ParentTaskRegister'
+})(ParentTaskRegister)
 
 function mapDispatchToProps(dispatch) {
   return {
-    getChildTaskDetailAction(childTaskId) {
-          dispatch(getChildTaskDetailAction(childTaskId));
-      }
+    createTaskAction(form) {
+      dispatch(createTaskAction(form));
+    }
   }
 }
 
 
-export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(ParentTaskDetail)));
+export default withStyles(styles)(withRouter(connect(null, mapDispatchToProps)(ParentTaskRegister)));

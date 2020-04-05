@@ -108,7 +108,7 @@ class TaskRegister extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-                            Task Register
+                            Child Task Register
             </Typography>
             <SearchIcon />
             <div className={classes.search}>
@@ -183,7 +183,7 @@ class TaskRegister extends React.Component {
                 <AddCircleOutlineIcon />
               </Avatar>
               <Typography component="h1" variant="h5">
-                Create Task
+                Create Child Task
               </Typography>
               <form  onSubmit={handleSubmit(this.submit.bind(this))}>
                 <Grid container spacing={2}>

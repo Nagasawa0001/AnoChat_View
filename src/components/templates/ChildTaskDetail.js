@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
 import { connect } from 'react-redux';
 
-
+import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -27,6 +27,11 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import BlockIcon from '@material-ui/icons/Block';
 
 const drawerWidth = 240;
 
@@ -75,13 +80,20 @@ const styles = theme => ({
         marginLeft: theme.spacing(1),
         width: 'auto',
     },
+    aaa: {
+      width: 500,
+    }
 },
 });
 
 class ChildTaskDetail extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = { value: ''};
+  }
 
   handleToTaskRegister() {
-    this.props.history.push('/create/task');
+    this.props.history.push('/create/task/child');
   }
 
   render() {
@@ -164,8 +176,23 @@ class ChildTaskDetail extends React.Component {
           </Hidden>
         </nav>
         <main className={classes.content}>
+        <BottomNavigation
+      value={this.state.value}
+      onChange={(event, newValue) => {
+        this.setState({ value: newValue});
+      }}
+      showLabels
+      className={classes.aaa}
+    >
+      <BottomNavigationAction label="Done" icon={<DoneOutlineIcon />} />
+      <BottomNavigationAction label="Deleted" icon={<DeleteForeverIcon />} />
+      <BottomNavigationAction label="Canceled" icon={<BlockIcon />} />
+    </BottomNavigation>
           <div className={classes.toolbar} />
           <Paper >
+          <Button color="primary" className="start-btn" variant="outlined" >Done</Button>
+          <Button color="secondary" className="start-btn" variant="outlined" >Delete</Button>
+          <Button color="default" className="start-btn" variant="outlined" >Cancel</Button>
             <Typography>{this.props.childTask.title}</Typography>
             <Typography>{this.props.childTask.content}</Typography>
             <Typography>参加人数</Typography>

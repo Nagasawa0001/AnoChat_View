@@ -5,6 +5,7 @@ import renderTextField from '../atoms/TextField';
 import { connect } from 'react-redux';
 import { getParentTaskDetailAction } from '../../modules/ParentTaskDetail';
 
+import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -107,7 +108,7 @@ class ProjectDetail extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-              PARENT TASK
+              PROJECT DETAIL
             </Typography>
             <SearchIcon />
             <div className={classes.search}>
@@ -173,15 +174,13 @@ class ProjectDetail extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Paper >
+          <Button color="secondary" className="start-btn" variant="outlined" >Delete</Button>
             <Typography>{this.props.project.title}</Typography>
             <Typography>{this.props.project.discription}</Typography>
             <Typography><PeopleAltIcon fontSize='small' />{this.props.project.currentUser}人参加中</Typography>
             <Typography>総親タスク数 + 未完了タスク数</Typography>
             <Typography>進捗率(%) + 進捗バー</Typography>
           </Paper>
-          <IconButton>
-            <AddIcon />Create Task
-          </IconButton>
               {
                 this.props.parentTaskList.map((parentTask) =>
                   <Paper className={classes.card} key={parentTask.id}>

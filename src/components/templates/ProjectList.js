@@ -245,8 +245,7 @@ class projectList extends React.Component {
                         {
                             this.props.projectList.map((project) =>
                                 <Card className={classes.card} key={project.id}>
-                                    <CardActionArea onClick={this.handleToTopicDetail.bind(this, project.id)}>
-
+                                        <CardActionArea onClick={this.handleToTopicDetail.bind(this, project.id)}>
                                         <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
                                             {project.title}
                                         </Typography>

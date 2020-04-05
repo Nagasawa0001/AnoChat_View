@@ -114,22 +114,6 @@ class ProjectRegister extends React.Component {
             <Typography variant="h6" noWrap>
                             PROJECT Register
             </Typography>
-            <SearchIcon />
-            <div className={classes.search}>
-                                <form >
-                                    <Field
-                                        placeholder='トピック名で検索...'
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        component={renderTextField}
-                                        name='title'
-                                        id='title'
-                                        value='aaaa'
-                                    />
-                                </form>
-                            </div>
                             <IconButton
                                     edge='end'
                                     aria-label='account of current user'
