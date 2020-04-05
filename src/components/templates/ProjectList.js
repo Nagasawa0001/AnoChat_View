@@ -93,6 +93,7 @@ class projectList extends React.Component {
 
     componentDidMount() {
         if (this.props.loggedIn) {
+            console.log(this.props.userId);
             this.props.getProjectListAction(this.props.userId);
         } else {
             this.props.history.push('/signin');
@@ -147,7 +148,7 @@ class projectList extends React.Component {
             </Typography>
             <SearchIcon />
             <div className={classes.search}>
-                                <form onSubmit=''>
+                                <form >
                                     <Field
                                         placeholder='トピック名で検索...'
                                         classes={{

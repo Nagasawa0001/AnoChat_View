@@ -98,8 +98,8 @@ const requestProjectList = (userId) => axios.get('http://localhost:8080/project/
     })
 
 function* getProjectList(context, action) {
-
-    const { infoList } = yield call(requestProjectList, getJSESSION().userId);
+    console.log(action);
+    const { infoList } = yield call(requestProjectList, action.userId);
     console.log(infoList);
     if (infoList) {
         yield put({ type: PROJECTLIST_GET_SUCCESS, infoList});
@@ -127,7 +127,6 @@ const requestSearchProject = (userId, title) => axios.get('http://localhost:8080
     })
 
 function* searchProject(context, action) {
-
     const { infoList, error } = yield call(requestSearchProject, action.form.userId, action.form.title);
     console.log(infoList);
     if (error) {
@@ -161,6 +160,7 @@ const requestConfirmInvitation = (messageInfo) => axios.patch('http://localhost:
 function* confirmInvitation(context, action) {
 
     const { res, error } = yield call(requestConfirmInvitation, action.messageInfo);
+    console.log(res);
     if(res.status === 200) {
         yield put({ type: PROJECTLIST_GET_REQUEST });
     } else if(error) {
