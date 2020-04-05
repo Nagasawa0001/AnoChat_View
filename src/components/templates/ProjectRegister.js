@@ -1,7 +1,11 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
-import renderTextField from '../atoms/Select';
+import renderTextField from '../atoms/TextField';
+import { connect } from 'react-redux';
+import { createProjectAction } from '../../modules/Register';
+
+
 
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
@@ -81,15 +85,19 @@ const styles = theme => ({
 });
 
 class ProjectRegister extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mobileOpen: false
+  componentDidMount() {
+    if (!this.props.loggedIn) {
+      this.props.history.push('/signin');
     }
+}
+
+  submit(form, dispatch) {
+    dispatch(createProjectAction(form));
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, handleSubmit } = this.props;
+    this.props.change('userId', this.props.userId);
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -108,7 +116,7 @@ class ProjectRegister extends React.Component {
             </Typography>
             <SearchIcon />
             <div className={classes.search}>
-                                <form onSubmit=''>
+                                <form >
                                     <Field
                                         placeholder='トピック名で検索...'
                                         classes={{
@@ -182,7 +190,7 @@ class ProjectRegister extends React.Component {
               <Typography component="h1" variant="h5">
                 Create Project
               </Typography>
-              <form >
+              <form onSubmit={handleSubmit(this.submit.bind(this))}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Field
@@ -231,5 +239,22 @@ ProjectRegister = reduxForm({
   form: 'ProjectRegister'
 })(ProjectRegister)
 
+function mapStateToProps(store) {
+  console.log(store);
+  return {
+      projectList: store.projectInfo.userInfo.projectList,
+      messageList: store.projectInfo.userInfo.messageList,
+      userId: store.userInfo.profile.id,
+      loggedIn: store.userInfo.loggedIn
+  }
+}
 
-export default withStyles(styles)(withRouter(ProjectRegister));
+function mapDispatchToProps(dispatch) {
+  return {
+    createProjectAction(form) {
+          dispatch(createProjectAction(form));
+      }
+  }
+}
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectRegister)));

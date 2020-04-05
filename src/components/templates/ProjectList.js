@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form'
-import getJSESSION from '../../common';
 import renderTextField from '../atoms/TextField';
 import { getProjectDetailAction } from '../../modules/ProjectDetail';
 import { searchProjectAction, confirmInvitationAction, getProjectListAction } from '../../modules/ProjectList';
@@ -93,11 +92,10 @@ const styles = theme => ({
 class projectList extends React.Component {
 
     componentDidMount() {
-        var sessionInfo = getJSESSION();
-        if (!sessionInfo.JSESSIONID && !sessionInfo.userId) {
-            this.props.history.push('/signin');
+        if (this.props.loggedIn) {
+            this.props.getProjectListAction(this.props.userId);
         } else {
-            this.props.getProjectListAction(JSON.parse(sessionInfo.userId));
+            this.props.history.push('/signin');
         }
     }
 

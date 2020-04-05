@@ -57,8 +57,6 @@ function* signin(context, action) {
     const { userInfo, error } = yield call(requestSignup, form);
     console.log(userInfo);
     if(userInfo) {
-        localStorage.setItem("profile", JSON.stringify(userInfo));
-        document.cookie = 'userId=' + userInfo.id;
         document.cookie = 'JSESSIONID=' + userInfo.jsessionId;
         yield put ({ type: SIGNIN_SUCCESS, userInfo});
         yield call (context.history.push, '/projects');

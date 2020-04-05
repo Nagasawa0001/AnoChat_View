@@ -23,11 +23,3 @@ export default function getJSESSION() {
     return cookieInfo;
 }
 
-export function setCookieHeader(jsessionId) {
-    var header = new Headers();
-
-    if(jsessionId) return null;
-    
-    header.append('Cookie', 'JSESSIONID=' + jsessionId);
-    return header;
-}

@@ -20,7 +20,7 @@ export function createTaskAction(form) {
     }
 }
 
-export function createProjectTaskAction(form) {
+export function createProjectAction(form) {
     return {
         type: CREATE_PROJECT_REQUEST,
         form: form
@@ -127,13 +127,13 @@ const requestCreateProject = (form) => axios.post('http://localhost:8080/project
     {
         title: form.title,
         discription: form.discription,
-        administratorId: form.administratorId
+        administratorId: form.userId
     },
     {
         withCredentials: true
     })
 .then((res) => {
-    const result = res.data;
+    const result = res;
     return { result }
 })
 .catch((error) => {
@@ -141,9 +141,9 @@ const requestCreateProject = (form) => axios.post('http://localhost:8080/project
 })
 
 function* createProjectTask(context, action){
-   const { result, error } = yield call(requestCreateProject, action.childTaskId);
+   const { result, error } = yield call(requestCreateProject, action.form);
 console.log(result);
-   if(result.status === 200) {
+   if(result.status === 201) {
        yield call(context.history.push, '/projects')
    } else {
        console.log('予期せぬエラーが発生しました　エラー：　' + error);
