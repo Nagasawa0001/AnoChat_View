@@ -5,7 +5,6 @@ import renderTextField from '../atoms/TextField';
 import { connect } from 'react-redux';
 import { getParentTaskDetailAction } from '../../modules/ParentTaskDetail';
 
-import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -27,8 +26,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import BlockIcon from '@material-ui/icons/Block';
+import ViewListIcon from '@material-ui/icons/ViewList';
 
 
 const drawerWidth = 240;
@@ -82,13 +86,23 @@ const styles = theme => ({
 });
 
 class ProjectDetail extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = { value: ''};
+  }
 
   componentDidMount() {
-
+    if (!this.props.loggedIn) {
+      this.props.history.push('/signin');
+    }
   }
 
   handleToParentTaskDetail(parentTaskId) {
     this.props.getParentTaskDetailAction(parentTaskId);
+  }
+
+  switchParentTaskList() {
+    console.log('switchChildTaskList');
   }
 
   render() {
@@ -174,13 +188,26 @@ class ProjectDetail extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Paper >
-          <Button color="secondary" className="start-btn" variant="outlined" >Delete</Button>
             <Typography>{this.props.project.title}</Typography>
             <Typography>{this.props.project.discription}</Typography>
             <Typography><PeopleAltIcon fontSize='small' />{this.props.project.currentUser}人参加中</Typography>
             <Typography>総親タスク数 + 未完了タスク数</Typography>
             <Typography>進捗率(%) + 進捗バー</Typography>
           </Paper>
+          <BottomNavigation
+      value={this.state.value}
+      onChange={(event, newValue) => {
+        console.log(newValue);
+        this.setState({value: newValue})
+      }}
+      showLabels
+      className={classes.aaa}
+    >
+      <BottomNavigationAction label="All" icon={<ViewListIcon />} />
+      <BottomNavigationAction label="Done" icon={<DoneOutlineIcon />} />
+      <BottomNavigationAction label="Deleted" icon={<DeleteForeverIcon />} />
+      <BottomNavigationAction label="Canceled" icon={<BlockIcon />} />
+    </BottomNavigation>
               {
                 this.props.parentTaskList.map((parentTask) =>
                   <Paper className={classes.card} key={parentTask.id}>
@@ -211,8 +238,9 @@ ProjectDetail = reduxForm({
 
 function mapStateToProps(store) {
   return {
-    project: store.project.projectDetail.project,
-    parentTaskList: store.project.projectDetail.parentTasks
+    project: store.userInfo.loggedIn ? store.project.projectDetail.project : {},
+    parentTaskList: store.userInfo.loggedIn ? store.project.projectDetail.parentTasks : [],
+    loggedIn: store.userInfo.loggedIn
   }
 }
 

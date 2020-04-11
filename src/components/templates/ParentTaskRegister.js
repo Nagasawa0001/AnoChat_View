@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
-import renderSelect from '../atoms/Select';
 import { createTaskAction } from '../../modules/Register';
 import { connect } from 'react-redux';
 
@@ -87,6 +86,12 @@ const styles = theme => ({
 
 class ParentTaskRegister extends React.Component {
 
+  componentDidMount() {
+    if (!this.props.loggedIn) {
+      this.props.history.push('/signin');
+    }
+  }
+
   submit(form, dispatch) {
     dispatch(createTaskAction(form));
   }
@@ -94,6 +99,9 @@ class ParentTaskRegister extends React.Component {
   render() {
     console.log(this.props);
     const { classes, handleSubmit } = this.props;
+    this.props.change('userId', this.props.userId);
+    this.props.change('taskType', 'Parent');
+    this.props.change('projectId', this.props.projectId);
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -187,18 +195,6 @@ class ParentTaskRegister extends React.Component {
               </Typography>
               <form  onSubmit={handleSubmit(this.submit.bind(this))}>
                 <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Field
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="taskType"
-                      label="taskType"
-                      name="taskType"
-                      autoComplete="taskType"
-                      component={renderSelect}
-                    />
-                  </Grid>
                   <Grid item xs={12}>
                     <Field
                       variant="outlined"
@@ -242,9 +238,19 @@ class ParentTaskRegister extends React.Component {
   }
 }
 
+
 ParentTaskRegister = reduxForm({
   form: 'ParentTaskRegister'
 })(ParentTaskRegister)
+
+function mapStateToProps(store) {
+  console.log(store);
+  return {
+      userId: store.userInfo.profile.id,
+      loggedIn: store.userInfo.loggedIn,
+      projectId: store.project.projectDetail.project.id
+  }
+}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -255,4 +261,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default withStyles(styles)(withRouter(connect(null, mapDispatchToProps)(ParentTaskRegister)));
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(ParentTaskRegister)));

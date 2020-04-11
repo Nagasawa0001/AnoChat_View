@@ -68,13 +68,13 @@ const requestCreateParentTask = (form) => axios.post('http://localhost:8080/task
         projectId: form.projectId,
         title: form.title,
         content: form.content,
-        creatorId: form.creatorId
+        creatorId: form.userId
     },
     {
         withCredentials: true
     })
 .then((res) => {
-    const result = res.data;
+    const result = res;
     return { result }
 })
 .catch((error) => {
@@ -86,13 +86,13 @@ const requestCreateChildTask = (form) => axios.post('http://localhost:8080/task/
         parentTaskId: form.parentTaskId,
         title: form.title,
         content: form.content,
-        creatorId: form.creatorId
+        creatorId: form.userId
     },
     {
         withCredentials: true
     })
 .then((res) => {
-    const result = res.data;
+    const result = res;
     return { result }
 })
 .catch((error) => {
@@ -101,7 +101,7 @@ const requestCreateChildTask = (form) => axios.post('http://localhost:8080/task/
 
 function* createTask(context, action){
    if(action.form.taskType === 'Parent') {
-        const { result, error } = yield call(requestCreateParentTask, action.childTaskId);
+        const { result, error } = yield call(requestCreateParentTask, action.form);
         if(result.status === 200) {
             yield call(context.history.push, '/projects')
         } else {
@@ -109,7 +109,7 @@ function* createTask(context, action){
             yield put({type: CREATE_TASK_FAILURE, error})
         }
    } else if(action.form.taskType === 'Child') {
-        const { result, error } = yield call(requestCreateChildTask, action.childTaskId);
+        const { result, error } = yield call(requestCreateChildTask, action.form);
         if(result.status === 200) {
             yield call(context.history.push, '/projects')
         } else {

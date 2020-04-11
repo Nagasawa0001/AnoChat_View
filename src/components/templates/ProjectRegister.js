@@ -7,7 +7,6 @@ import { createProjectAction } from '../../modules/Register';
 
 
 
-import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -89,7 +88,7 @@ class ProjectRegister extends React.Component {
     if (!this.props.loggedIn) {
       this.props.history.push('/signin');
     }
-}
+  }
 
   submit(form, dispatch) {
     dispatch(createProjectAction(form));
@@ -226,8 +225,6 @@ ProjectRegister = reduxForm({
 function mapStateToProps(store) {
   console.log(store);
   return {
-      projectList: store.projectInfo.userInfo.projectList,
-      messageList: store.projectInfo.userInfo.messageList,
       userId: store.userInfo.profile.id,
       loggedIn: store.userInfo.loggedIn
   }

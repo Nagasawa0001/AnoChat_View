@@ -4,9 +4,10 @@ import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
 import { getChildTaskDetailAction } from '../../modules/ChildTaskDetail';
 import { connect } from 'react-redux';
+
+
 import Button from '@material-ui/core/Button';
-
-
+import ViewListIcon from '@material-ui/icons/ViewList';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -93,8 +94,22 @@ class ParentTaskDetail extends React.Component {
     this.state = { value: ''};
   }
 
+  componentDidMount() {
+    if (!this.props.loggedIn) {
+      this.props.history.push('/signin');
+    }
+  }
+
   handleToChildTaskDetail(childTaskId) {
     this.props.getChildTaskDetailAction(childTaskId);
+  }
+
+  updateParentTaskStatus() {
+    console.log('updateParentTaskStatus');
+  }
+
+  switchChildTaskList() {
+    console.log('switchChildTaskList');
   }
 
   handleToParentTaskRegister() {
@@ -181,33 +196,33 @@ class ParentTaskDetail extends React.Component {
           </Hidden>
         </nav>
         <main className={classes.content}>
-        <BottomNavigation
-      value={this.state.value}
-      onChange={(event, newValue) => {
-        this.setState({ value: newValue});
-      }}
-      showLabels
-      className={classes.aaa}
-    >
-      <BottomNavigationAction label="Done" icon={<DoneOutlineIcon />} />
-      <BottomNavigationAction label="Deleted" icon={<DeleteForeverIcon />} />
-      <BottomNavigationAction label="Canceled" icon={<BlockIcon />} />
-    </BottomNavigation>
           <div className={classes.toolbar} />
           <Paper >
-          <Button color="primary" className="start-btn" variant="outlined" >Done</Button>
+          <Button color="primary" className="start-btn" variant="outlined" >Done：</Button>
           <Button color="secondary" className="start-btn" variant="outlined" >Delete</Button>
           <Button color="default" className="start-btn" variant="outlined" >Cancel</Button>
             <Typography>{this.props.parentTask.title}</Typography>
             <Typography>{this.props.parentTask.content}</Typography>
-            <Typography>参加人数</Typography>
-            <Typography>子タスク　完了済： </Typography>
             <Typography>子タスク　未完了： </Typography>
             <Typography>進捗率(%) + 進捗バー</Typography>
           </Paper>
           <IconButton onClick={this.handleToParentTaskRegister.bind(this)}>
             <AddIcon />Create Task
           </IconButton>
+          <BottomNavigation
+      value={this.state.value}
+      onChange={(event, newValue) => {
+        console.log(newValue);
+        this.setState({value: newValue})
+      }}
+      showLabels
+      className={classes.aaa}
+    >
+      <BottomNavigationAction label="All" icon={<ViewListIcon />} />
+      <BottomNavigationAction label="Done" icon={<DoneOutlineIcon />} />
+      <BottomNavigationAction label="Deleted" icon={<DeleteForeverIcon />} />
+      <BottomNavigationAction label="Canceled" icon={<BlockIcon />} />
+    </BottomNavigation>
           {
                 this.props.childTaskList.map((childTask) =>
                   <Paper className={classes.card} key={childTask.id}>
@@ -240,7 +255,8 @@ function mapStateToProps(store) {
   console.log(store.parentTask);
   return {
     parentTask: store.parentTask.parentTask,
-    childTaskList: store.parentTask.childTaskList
+    childTaskList: store.parentTask.childTaskList,
+    loggedIn: store.userInfo.loggedIn
   }
 }
 

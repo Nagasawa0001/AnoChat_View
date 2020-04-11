@@ -97,6 +97,8 @@ class projectList extends React.Component {
             this.props.getProjectListAction(this.props.userId);
         } else {
             this.props.history.push('/signin');
+            console.log(this.props.userId);
+            // this.props.getProjectListAction(this.props.userId);
         }
     }
 
@@ -128,7 +130,8 @@ class projectList extends React.Component {
 
 
     render() {
-        const { classes } = this.props;
+        const { classes, handleSubmit } = this.props;
+        this.props.change('userId', this.props.userId);
         console.log(this.props);
         return (
             <div className={classes.root}>
@@ -148,7 +151,7 @@ class projectList extends React.Component {
             </Typography>
             <SearchIcon />
             <div className={classes.search}>
-                                <form >
+                                <form onSubmit={handleSubmit(this.submit.bind(this))}>
                                     <Field
                                         placeholder='トピック名で検索...'
                                         classes={{

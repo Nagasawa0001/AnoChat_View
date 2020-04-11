@@ -4,15 +4,19 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 
 const renderSelect = (props) => {
     console.log(props);
-    const { name, id, input } = props;
+    const { name, id, input, values } = props;
     return (
         <NativeSelect
           {...input}
           id={id}
           name={name}
         >
-          <option value="Parent">Parent</option>
-          <option value="Child">Child</option>
+          <option value="">-------------</option>
+          {
+            values.map((parentTask) => 
+          <option value={parentTask.id}>{parentTask.title}</option>
+            )
+          }
         </NativeSelect>
     );
 }

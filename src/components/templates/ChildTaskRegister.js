@@ -87,6 +87,12 @@ const styles = theme => ({
 
 class TaskRegister extends React.Component {
 
+  componentDidMount() {
+    if (!this.props.loggedIn) {
+      this.props.history.push('/signin');
+    }
+  }
+
   submit(form, dispatch) {
     dispatch(createTaskAction(form));
   }
@@ -94,6 +100,8 @@ class TaskRegister extends React.Component {
   render() {
     console.log(this.props);
     const { classes, handleSubmit } = this.props;
+    this.props.change('userId', this.props.userId);
+    this.props.change('taskType', 'Child');
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -192,10 +200,11 @@ class TaskRegister extends React.Component {
                       variant="outlined"
                       required
                       fullWidth
-                      id="taskType"
-                      label="taskType"
-                      name="taskType"
-                      autoComplete="taskType"
+                      id="parentTaskId"
+                      label="parentTaskId"
+                      name="parentTaskId"
+                      autoComplete="parentTaskId"
+                      values={this.props.parentTaskList}
                       component={renderSelect}
                     />
                   </Grid>
@@ -246,6 +255,15 @@ TaskRegister = reduxForm({
   form: 'TaskRegister'
 })(TaskRegister)
 
+function mapStateToProps(store) {
+  console.log(store);
+  return {
+      parentTaskList: store.project.projectDetail.parentTasks,
+      userId: store.userInfo.profile.id,
+      loggedIn: store.userInfo.loggedIn
+  }
+}
+
 function mapDispatchToProps(dispatch) {
   return {
     createTaskAction(form) {
@@ -255,4 +273,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default withStyles(styles)(withRouter(connect(null, mapDispatchToProps)(TaskRegister)));
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(TaskRegister)));

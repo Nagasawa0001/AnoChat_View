@@ -4,6 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
 import { connect } from 'react-redux';
 
+import ViewListIcon from '@material-ui/icons/ViewList';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
@@ -92,8 +93,18 @@ class ChildTaskDetail extends React.Component {
     this.state = { value: ''};
   }
 
+  componentDidMount() {
+    if (!this.props.loggedIn) {
+      this.props.history.push('/signin');
+    }
+  }
+
   handleToTaskRegister() {
     this.props.history.push('/create/task/child');
+  }
+
+  updateChildTaskStatus() {
+    console.log('updateParentTaskStatus');
   }
 
   render() {
@@ -184,6 +195,7 @@ class ChildTaskDetail extends React.Component {
       showLabels
       className={classes.aaa}
     >
+      <BottomNavigationAction label="All" icon={<ViewListIcon />} />
       <BottomNavigationAction label="Done" icon={<DoneOutlineIcon />} />
       <BottomNavigationAction label="Deleted" icon={<DeleteForeverIcon />} />
       <BottomNavigationAction label="Canceled" icon={<BlockIcon />} />
@@ -229,8 +241,9 @@ ChildTaskDetail = reduxForm({
 function mapStateToProps(store) {
   console.log(store.childTask);
   return {
-    childTask: store.childTask.childTask,
-    taskCommentList: store.childTask.taskCommentList
+    childTask: store.userInfo.loggedIn ? store.childTask.childTask : {},
+    taskCommentList: store.userInfo.loggedIn ? store.childTask.taskCommentList : [],
+    loggedIn: store.userInfo.loggedIn
   }
 }
 
