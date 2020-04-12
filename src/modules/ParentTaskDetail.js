@@ -8,9 +8,13 @@ export const GET_PARENTTASKDETAIL_REQUEST = 'GET_PARENTTASKDETAIL_REQUEST';
 export const GET_PARENTTASKDETAIL_SUCCESS = 'GET_PARENTTASKDETAIL_SUCCESS';
 export const GET_PARENTTASKDETAIL_FAILURE = 'GET_PARENTTASKDETAIL_FAILURE';
 
-export const SEARCH_PARENTTASKDETAIL_REQUEST = 'SEARCH_PARENTTASKDETAIL_REQUEST';
-export const SEARCH_PARENTTASKDETAIL_SUCCESS = 'SEARCH_PARENTTASKDETAIL_SUCCESS';
-export const SEARCH_PARENTTASKDETAIL_FAILURE = 'SEARCH_PARENTTASKDETAIL_FAILURE';
+export const UPDATE_PARENT_TASK_STATUS_REQUEST = 'UPDATE_PARENT_TASK_STATUS_REQUEST';
+export const UPDATE_PARENT_TASK_STATUS_SUCCESS = 'UPDATE_PARENT_TASK_STATUS_SUCCESS';
+export const UPDATE_PARENT_TASK_STATUS_FAILURE = 'UPDATE_PARENT_TASK_STATUS_FAILURE';
+
+export const SWITCH_CHILD_TASK_REQUEST = 'SWITCH_CHILD_TASK_REQUEST';
+export const SWITCH_CHILD_TASK_SUCCESS = 'SWITCH_CHILD_TASK_SUCCESS';
+export const SWITCH_CHILD_TASK_FAILURE = 'SWITCH_CHILD_TASK_FAILURE';
 
 
 export function getParentTaskDetailAction(parentTaskId) {
@@ -20,10 +24,23 @@ export function getParentTaskDetailAction(parentTaskId) {
     }
 }
 
-export function searchChildTaskAction(form) {
+export function updateParentTaskStatusAction(parentTaskId, status) {
     return {
-        type: SEARCH_PARENTTASKDETAIL_REQUEST,
-        form: form
+        type: UPDATE_PARENT_TASK_STATUS_REQUEST,
+        payload: {
+            parentTaskId: parentTaskId,
+            status: status
+        },
+    }
+}
+
+export function switchChildTaskAction(parentTaskId, status) {
+    return {
+        type: SWITCH_CHILD_TASK_REQUEST,
+        payload: {
+            parentTaskId: parentTaskId,
+            status: status
+        },
     }
 }
 
@@ -47,14 +64,20 @@ export function parentTaskDetailReducer(state = secondState, action) {
         case GET_PARENTTASKDETAIL_FAILURE:
             return Object.assign({}, state, { processing: false, error: action.error })
 
-        case SEARCH_PARENTTASKDETAIL_REQUEST:
+        case SWITCH_CHILD_TASK_REQUEST:
             return Object.assign({}, state, { processing: true })
 
-        case SEARCH_PARENTTASKDETAIL_SUCCESS:
+        case SWITCH_CHILD_TASK_SUCCESS:
             state.projects = action.projects
             return Object.assign({}, state, { processing: false, parentTask: action.result.parentTask, childTaskList: action.result.childTaskList });
 
-        case SEARCH_PARENTTASKDETAIL_FAILURE:
+        case SWITCH_CHILD_TASK_FAILURE:
+            return Object.assign({}, state, { processing: false, error: action.error })
+
+        case UPDATE_PARENT_TASK_STATUS_REQUEST:
+            return Object.assign({}, state, { processing: true })
+
+        case UPDATE_PARENT_TASK_STATUS_FAILURE:
             return Object.assign({}, state, { processing: false, error: action.error })
 
         default:
@@ -91,35 +114,67 @@ function* getParentTaskDetailSaga(context) {
     yield takeLatest(GET_PARENTTASKDETAIL_REQUEST, getParentTaskDetail, context)
 }
 
-const requestSearchChildTask = (projectId) => axios.get('http://localhost:8080/project?id=' + projectId,
+const requestSwitchChildTask = (payload) => axios.get('http://localhost:8080/task/child/switch?parentTaskId=' + payload.parentTAskId + '&status=' + payload.status,
     {
         withCredentials: true
     })
-.then((res) => {
-    const projectDetail = res.data;
-    return { projectDetail }
-})
-.catch((error) => {
-    return { error }
-})
+    .then((res) => {
+        const result = res.data;
+        return { result }
+    })
+    .catch((error) => {
+        return { error }
+    })
 
-function* searchChildTask(context, action){
-   const { projectDetail, error } = yield call(requestSearchChildTask, action.projectId);
+function* switchChildTask(context, action){
+   const { projectDetail, error } = yield call(requestSwitchChildTask, action.projectId);
 
    if(projectDetail) {
-       yield put({type: SEARCH_PARENTTASKDETAIL_SUCCESS, projectDetail});
+       yield put({type: SWITCH_CHILD_TASK_SUCCESS, projectDetail});
        yield call(context.history.push, '/project/' + projectDetail.id)
    } else {
        console.log('予期せぬエラーが発生しました　エラー：　' + error);
-       yield put({type: SEARCH_PARENTTASKDETAIL_FAILURE, error})
+       yield put({type: SWITCH_CHILD_TASK_FAILURE, error})
    }
 }
 
-function* searchParentTaskSaga(context) {
-    yield takeLatest(SEARCH_PARENTTASKDETAIL_REQUEST, searchChildTask, context)
+function* switchChildTaskSaga(context) {
+    yield takeLatest(SWITCH_CHILD_TASK_REQUEST, switchChildTask, context)
+}
+
+const requestUpdateParentTaskStatus = (payload) => axios.patch('http://localhost:8080/task/parent',
+    {
+        id: payload.parentTaskId,
+        status: payload.status
+    },    
+    {
+        withCredentials: true
+    })
+    .then((res) => {
+        const result = res;
+        return { result }
+    })
+    .catch((error) => {
+        return { error }
+    })
+
+function* updateParentTaskStatus(context, action){
+   const { result, error } = yield call(requestUpdateParentTaskStatus, action.payload);
+
+   if(result.status === 200) {
+        yield put({type: GET_PARENTTASKDETAIL_REQUEST})
+   } else if (error) {
+        console.log('予期せぬエラーが発生しました　エラー：　' + error);
+        yield put({type: UPDATE_PARENT_TASK_STATUS_REQUEST, error})
+   }
+}
+
+function* updateParentTaskStatusSaga(context) {
+    yield takeLatest(UPDATE_PARENT_TASK_STATUS_REQUEST, updateParentTaskStatus, context)
 }
 
 export const parentTaskSagas = [
     getParentTaskDetailSaga,
-    searchParentTaskSaga
+    switchChildTaskSaga,
+    updateParentTaskStatusSaga
 ];

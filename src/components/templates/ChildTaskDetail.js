@@ -207,10 +207,7 @@ class ChildTaskDetail extends React.Component {
           <Button color="default" className="start-btn" variant="outlined" >Cancel</Button>
             <Typography>{this.props.childTask.title}</Typography>
             <Typography>{this.props.childTask.content}</Typography>
-            <Typography>参加人数</Typography>
-            <Typography>子タスク　完了済： </Typography>
-            <Typography>子タスク　未完了： </Typography>
-            <Typography>進捗率(%) + 進捗バー</Typography>
+            <Typography>コメント数：**</Typography>
           </Paper>
           <IconButton onClick={this.handleToTaskRegister.bind(this)}>
             <AddIcon />Create Task
