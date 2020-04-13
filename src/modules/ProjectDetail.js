@@ -153,7 +153,7 @@ const requestSwitchParentTask = (payload) => axios.get('http://localhost:8080/ta
 })
 
 function* switchParentTask(context, action){
-   const { projectDetail, error } = yield call(requestSwitchParentTask, action.projectId);
+   const { projectDetail, error } = yield call(requestSwitchParentTask, action.payload);
 
    if(projectDetail) {
        yield put({type: SWITCH_PARENT_TASK_SUCCESS, projectDetail});

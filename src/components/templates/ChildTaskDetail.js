@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
 import { connect } from 'react-redux';
+import { updateChildTaskStatusAction } from '../../modules/ChildTaskDetail';
 
 import ViewListIcon from '@material-ui/icons/ViewList';
 import Button from '@material-ui/core/Button';
@@ -103,7 +104,8 @@ class ChildTaskDetail extends React.Component {
     this.props.history.push('/create/task/child');
   }
 
-  updateChildTaskStatus() {
+  updateChildTaskStatus(e) {
+    this.props.updateChildTaskStatusAction(this.props.childTask.id, e.currentTarget.value);
     console.log('updateParentTaskStatus');
   }
 
@@ -202,9 +204,9 @@ class ChildTaskDetail extends React.Component {
     </BottomNavigation>
           <div className={classes.toolbar} />
           <Paper >
-          <Button color="primary" className="start-btn" variant="outlined" >Done</Button>
-          <Button color="secondary" className="start-btn" variant="outlined" >Delete</Button>
-          <Button color="default" className="start-btn" variant="outlined" >Cancel</Button>
+          <Button color="primary" variant="outlined" value='1' onClick={this.updateChildTaskStatus.bind(this)}>Done</Button>
+          <Button color="secondary" variant="outlined" value='2' onClick={this.updateChildTaskStatus.bind(this)}>Delete</Button>
+          <Button color="default" variant="outlined" value='3' onClick={this.updateChildTaskStatus.bind(this)}>Cancel</Button>
             <Typography>{this.props.childTask.title}</Typography>
             <Typography>{this.props.childTask.content}</Typography>
             <Typography>コメント数：**</Typography>
@@ -244,5 +246,13 @@ function mapStateToProps(store) {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    updateChildTaskStatusAction(childTaskId, status) {
+        dispatch(updateChildTaskStatusAction(childTaskId, status));
+    }
+  }
+}
 
-export default withStyles(styles)(withRouter(connect(mapStateToProps, null)(ChildTaskDetail)));
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(ChildTaskDetail)));

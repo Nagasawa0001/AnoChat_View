@@ -4,6 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
 import { getChildTaskDetailAction } from '../../modules/ChildTaskDetail';
 import { connect } from 'react-redux';
+import { switchChildTaskAction, updateParentTaskStatusAction } from '../../modules/ParentTaskDetail';
 
 
 import Button from '@material-ui/core/Button';
@@ -91,7 +92,7 @@ const styles = theme => ({
 class ParentTaskDetail extends React.Component {
   constructor(props){
     super(props);
-    this.state = { value: ''};
+    this.state = { status: ''};
   }
 
   componentDidMount() {
@@ -104,12 +105,14 @@ class ParentTaskDetail extends React.Component {
     this.props.getChildTaskDetailAction(childTaskId);
   }
 
-  updateParentTaskStatus() {
-    console.log('updateParentTaskStatus');
+  updateParentTaskStatus(e) {
+    console.log(e.currentTarget.value);
+    this.props.updateParentTaskStatusAction(this.props.parentTask.id, e.currentTarget.value);
   }
 
-  switchChildTaskList() {
+  switchChildTaskList(status) {
     console.log('switchChildTaskList');
+    this.props.switchChildTaskAction(this.props.parentTask.id, status);
   }
 
   handleToParentTaskRegister() {
@@ -198,9 +201,9 @@ class ParentTaskDetail extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Paper >
-          <Button color="primary" className="start-btn" variant="outlined" >Done：</Button>
-          <Button color="secondary" className="start-btn" variant="outlined" >Delete</Button>
-          <Button color="default" className="start-btn" variant="outlined" >Cancel</Button>
+          <Button color="primary" variant="outlined" value='1' onClick={this.updateParentTaskStatus.bind(this)}>Done：</Button>
+          <Button color="secondary" variant="outlined" value='2' onClick={this.updateParentTaskStatus.bind(this)}>Delete</Button>
+          <Button color="default" variant="outlined" value='3' onClick={this.updateParentTaskStatus.bind(this)}>Cancel</Button>
             <Typography>{this.props.parentTask.title}</Typography>
             <Typography>{this.props.parentTask.content}</Typography>
             <Typography>子タスク　未完了： </Typography>
@@ -210,10 +213,10 @@ class ParentTaskDetail extends React.Component {
             <AddIcon />Create Task
           </IconButton>
           <BottomNavigation
-      value={this.state.value}
-      onChange={(event, newValue) => {
-        console.log(newValue);
-        this.setState({value: newValue})
+      value={this.state.status}
+      onChange={(event, status) => {
+        this.switchChildTaskList(status)
+        this.setState({status: status})
       }}
       showLabels
       className={classes.aaa}
@@ -263,8 +266,14 @@ function mapStateToProps(store) {
 function mapDispatchToProps(dispatch) {
   return {
     getChildTaskDetailAction(childTaskId) {
-          dispatch(getChildTaskDetailAction(childTaskId));
-      }
+        dispatch(getChildTaskDetailAction(childTaskId));
+    },
+    switchChildTaskAction(parentTaskId, status) {
+      dispatch(switchChildTaskAction(parentTaskId, status));
+    },
+    updateParentTaskStatusAction(parentTaskId, status) {
+      dispatch(updateParentTaskStatusAction(parentTaskId, status));
+    }
   }
 }
 

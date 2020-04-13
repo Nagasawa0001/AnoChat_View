@@ -62,7 +62,11 @@ export function childTaskDetailReducer(state = secondState, action) {
 }
 
 // 【Middleware】////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const requestGetChildTaskDetail = (childTaskId) => axios.get('http://localhost:8080/task/child?id=' + childTaskId,
+const requestGetChildTaskDetail = (payload) => axios.patch('http://localhost:8080/task/child',
+    {
+        id: payload.childTaskId,
+        status: payload.status
+    }, 
     {
         withCredentials: true
     })

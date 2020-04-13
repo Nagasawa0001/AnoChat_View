@@ -4,6 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
 import { connect } from 'react-redux';
 import { getParentTaskDetailAction } from '../../modules/ParentTaskDetail';
+import { switchParentTaskAction } from '../../modules/ProjectDetail';
 
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
@@ -88,7 +89,7 @@ const styles = theme => ({
 class ProjectDetail extends React.Component {
   constructor(props){
     super(props);
-    this.state = { value: ''};
+    this.state = { status: ''};
   }
 
   componentDidMount() {
@@ -101,8 +102,8 @@ class ProjectDetail extends React.Component {
     this.props.getParentTaskDetailAction(parentTaskId);
   }
 
-  switchParentTaskList() {
-    console.log('switchChildTaskList');
+  switchParentTaskList(status) {
+    this.props.switchParentTaskAction(this.props.project.id, status);
   }
 
   render() {
@@ -195,10 +196,11 @@ class ProjectDetail extends React.Component {
             <Typography>進捗率(%) + 進捗バー</Typography>
           </Paper>
           <BottomNavigation
-      value={this.state.value}
-      onChange={(event, newValue) => {
-        console.log(newValue);
-        this.setState({value: newValue})
+          value={this.state.status}
+      onChange={(event, status) => {
+        console.log(status);
+        this.switchParentTaskList(status)
+        this.setState({status: status})
       }}
       showLabels
       className={classes.aaa}
@@ -248,7 +250,10 @@ function mapDispatchToProps(dispatch) {
   return {
     getParentTaskDetailAction(parentTaskId) {
           dispatch(getParentTaskDetailAction(parentTaskId));
-      }
+    },
+    switchParentTaskAction(projectId, status) {
+      dispatch(switchParentTaskAction(projectId, status));
+    }
   }
 }
 
