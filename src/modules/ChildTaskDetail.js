@@ -94,7 +94,7 @@ function* getChildTaskDetailSaga(context) {
     yield takeLatest(GET_CHILDTASKDETAIL_REQUEST, getChildTaskDetail, context)
 }
 
-const requestUpdateChildTaskStatus = (payload) => axios.patch('http://localhost:8080/task/child',
+const requestUpdateChildTaskStatus = (payload) => axios.patch('http://localhost:8080/task/child/status',
     {
         id: payload.childTaskId,
         status: payload.status

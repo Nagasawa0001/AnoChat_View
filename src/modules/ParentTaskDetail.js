@@ -142,10 +142,10 @@ function* switchChildTaskSaga(context) {
     yield takeLatest(SWITCH_CHILD_TASK_REQUEST, switchChildTask, context)
 }
 
-const requestUpdateParentTaskStatus = (payload) => axios.patch('http://localhost:8080/task/parent',
+const requestUpdateParentTaskStatus = (payload) => axios.patch('http://localhost:8080/task/parent/status',
     {
         id: payload.parentTaskId,
-        status: payload.status
+        status: parseInt(payload.status)
     },    
     {
         withCredentials: true
@@ -160,9 +160,8 @@ const requestUpdateParentTaskStatus = (payload) => axios.patch('http://localhost
 
 function* updateParentTaskStatus(context, action){
    const { result, error } = yield call(requestUpdateParentTaskStatus, action.payload);
-
    if(result.status === 200) {
-        yield put({type: GET_PARENTTASKDETAIL_REQUEST})
+        yield call(context.history.push, '/projects');
    } else if (error) {
         console.log('予期せぬエラーが発生しました　エラー：　' + error);
         yield put({type: UPDATE_PARENT_TASK_STATUS_REQUEST, error})
