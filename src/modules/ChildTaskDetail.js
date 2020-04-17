@@ -62,11 +62,7 @@ export function childTaskDetailReducer(state = secondState, action) {
 }
 
 // 【Middleware】////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const requestGetChildTaskDetail = (payload) => axios.patch('http://localhost:8080/task/child',
-    {
-        id: payload.childTaskId,
-        status: payload.status
-    }, 
+const requestGetChildTaskDetail = (childTaskId) => axios.get('http://localhost:8080/task/child?id=' + childTaskId,
     {
         withCredentials: true
     })
@@ -114,7 +110,7 @@ function* updateChildTaskStatus(context, action){
    const { result, error } = yield call(requestUpdateChildTaskStatus, action.payload);
 
    if(result.status === 200) {
-        yield put({type: GET_CHILDTASKDETAIL_REQUEST})
+        yield call(context.history.push, '/projects');
    } else if (error) {
         console.log('予期せぬエラーが発生しました　エラー：　' + error);
         yield put({type: UPDATE_CHILD_TASK_STATUS_FAILURE, error})

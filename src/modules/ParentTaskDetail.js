@@ -114,7 +114,7 @@ function* getParentTaskDetailSaga(context) {
     yield takeLatest(GET_PARENTTASKDETAIL_REQUEST, getParentTaskDetail, context)
 }
 
-const requestSwitchChildTask = (payload) => axios.get('http://localhost:8080/task/child/switch?parentTaskId=' + payload.parentTAskId + '&status=' + payload.status,
+const requestSwitchChildTask = (payload) => axios.get('http://localhost:8080/task/child/switch?parentTaskId=' + payload.parentTaskId + '&status=' + payload.status,
     {
         withCredentials: true
     })
@@ -127,15 +127,15 @@ const requestSwitchChildTask = (payload) => axios.get('http://localhost:8080/tas
     })
 
 function* switchChildTask(context, action){
-   const { projectDetail, error } = yield call(requestSwitchChildTask, action.payload);
+   const { result, error } = yield call(requestSwitchChildTask, action.payload);
 
-   if(projectDetail) {
-       yield put({type: SWITCH_CHILD_TASK_SUCCESS, projectDetail});
-       yield call(context.history.push, '/project/' + projectDetail.id)
-   } else {
-       console.log('予期せぬエラーが発生しました　エラー：　' + error);
-       yield put({type: SWITCH_CHILD_TASK_FAILURE, error})
-   }
+   if(result) {
+    yield put({type: GET_PARENTTASKDETAIL_SUCCESS, result});
+    yield call(context.history.push, '/task/parent/' + result.parentTask.id)
+} else {
+    console.log('予期せぬエラーが発生しました　エラー：　' + error);
+    yield put({type: GET_PARENTTASKDETAIL_FAILURE, error})
+}
 }
 
 function* switchChildTaskSaga(context) {
