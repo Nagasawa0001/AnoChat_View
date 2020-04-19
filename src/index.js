@@ -17,6 +17,7 @@ import { signinSagas } from './modules/Signin';
 import { parentTaskSagas } from './modules/ParentTaskDetail';
 import { childTaskSagas } from './modules/ChildTaskDetail';
 import { registerSagas } from './modules/Register';
+import { logoutSagas } from './modules/Auth';
 import rootReducers from './modules/allReducers';
 
 import ProjectList from './components/templates/ProjectList';
@@ -24,9 +25,7 @@ import Top from './components/templates/Top';
 import SignupTemp from './components/templates/SignupTemp';
 import Signin from './components/templates/Signin';
 import Signup from './components/templates/Signup';
-import InputEmail from './components/templates/InputEmail';
 import ProjectDetail from './components/templates/ProjectDetail';
-import InputPassword from './components/templates/InputPassword';
 import ParentTaskDetail from './components/templates/ParentTaskDetail';
 import ChildTaskDetail from './components/templates/ChildTaskDetail';
 import ChildTaskRegister from './components/templates/ChildTaskRegister';
@@ -42,6 +41,7 @@ const allSagas = [
     ...parentTaskSagas,
     ...childTaskSagas,
     ...registerSagas,
+    ...logoutSagas
 ];
 
 function* rootSaga(context) {
@@ -64,8 +64,6 @@ class App extends React.Component {
                         <Route exact path={'/signup'} component={SignupTemp} />
                         <Route exact path={'/signup/auth'} component={Signup} />
                         <Route exact path={'/signin'} component={Signin} />
-                        <Route exact path={'/reset/email'} component={InputEmail} />
-                        <Route exact path={'/reset/password'} component={InputPassword} />
                         <Route exact path={'/projects'} component={ProjectList} />
                         <Route exact path={'/project/:id'} component={ProjectDetail} />
                         <Route exact path={'/task/parent/:id'} component={ParentTaskDetail} />

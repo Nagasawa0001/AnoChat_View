@@ -9,7 +9,6 @@ export default function getJSESSION() {
     if(!cookie) return cookieInfo;
 
     var cookieList = cookie.split('; ');
-    console.log(cookieList);
     cookieList.forEach(function(value) {
         for(var i=0; i<cookieList.length; i++) {
             var cookieListTemp = value.split('=');

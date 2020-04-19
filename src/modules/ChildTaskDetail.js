@@ -76,7 +76,6 @@ const requestGetChildTaskDetail = (childTaskId) => axios.get('http://localhost:8
 
 function* getChildTaskDetail(context, action){
    const { result, error } = yield call(requestGetChildTaskDetail, action.childTaskId);
-console.log(result);
    if(result) {
        yield put({type: GET_CHILDTASKDETAIL_SUCCESS, result});
        yield call(context.history.push, '/task/child/' + result.childTask.id)

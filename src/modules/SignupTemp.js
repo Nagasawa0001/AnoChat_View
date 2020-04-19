@@ -44,18 +44,15 @@ const requestSignup = (form) => axios.post('http://localhost:8080/users/signup/t
     password: form.password
 })
     .then((res) => {
-        console.log(res);
         const token = res.data;
         return { token }
     })
     .catch((error) => {
-        console.log('error : ' + error);
         return { error }
     })
 
 function* signupTemp(context, action) {
     const { token, error } = yield call(requestSignup, action.form);
-    console.log(context);
     if(token) {
         yield put ({ type: SIGNUP_TEMP_SUCCESS, authToken: token});
         yield call (context.history.push('/signup/auth'));

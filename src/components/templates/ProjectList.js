@@ -5,33 +5,30 @@ import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
 import { getProjectDetailAction } from '../../modules/ProjectDetail';
 import { searchProjectAction, confirmInvitationAction, getProjectListAction } from '../../modules/ProjectList';
+import { logoutAction } from '../../modules/Auth';
 
 import '../../assets/ProjectList.css';
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Paper } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { fade } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Divider from '@material-ui/core/Divider';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { withStyles } from '@material-ui/core/styles';
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const drawerWidth = 240;
 
@@ -63,41 +60,39 @@ const styles = theme => ({
         width: drawerWidth,
     },
     content: {
+        justifyContent: 'center',
         flexGrow: 1,
         padding: theme.spacing(3),
-    },
-    search: {
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.35),
-        '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
-        },
-        marginRight: theme.spacing(2),
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(1),
-            width: 'auto',
-        },
     },
     messageButton: {
         width: 80
     },
     messageFrame: {
         marginBottom: 10
+    },
+    searchForm: {
+        margin: 30,
+        marginRight: 310
+    },
+    createButton: {
+        margin: 15,
+    },
+    project: {
+        justifyContent: 'center',
+        margin: 20,
+        width: 700,
+        height: 120
     }
 });
 
-class projectList extends React.Component {
+class ProjectList extends React.Component {
 
     componentDidMount() {
         if (this.props.loggedIn) {
-            console.log(this.props.userId);
             this.props.getProjectListAction(this.props.userId);
         } else {
+            document.cookie = "JSESSIONID=; expires=0";
             this.props.history.push('/signin');
-            console.log(this.props.userId);
             // this.props.getProjectListAction(this.props.userId);
         }
     }
@@ -128,11 +123,14 @@ class projectList extends React.Component {
         this.props.history.push('/profile');
     }
 
+    logout() {
+        this.props.logoutAction();
+    }
+
 
     render() {
         const { classes, handleSubmit } = this.props;
         this.props.change('userId', this.props.userId);
-        console.log(this.props);
         return (
             <div className={classes.root}>
                 <CssBaseline />
@@ -149,31 +147,16 @@ class projectList extends React.Component {
                         <Typography variant="h6" noWrap>
                             PROJECT
             </Typography>
-            <SearchIcon />
-            <div className={classes.search}>
-                                <form onSubmit={handleSubmit(this.submit.bind(this))}>
-                                    <Field
-                                        placeholder='トピック名で検索...'
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        component={renderTextField}
-                                        name='title'
-                                        id='title'
-                                    />
-                                </form>
-                            </div>
                             <div className={classes.grow}>
                             <IconButton
                                     edge='end'
                                     aria-label='account of current user'
                                     aria-controls=''
                                     aria-haspopup='true'
-                                    onClick={this.handleToProfile.bind(this)}
+                                    onClick={this.logout.bind(this)}
                                     color='inherit'
                                 >
-                                    <AccountCircle style={{ fontSize: 30 }}/>
+                                    <ExitToAppIcon style={{ fontSize: 30 }}/>
                                 </IconButton>
                                 </div>
                     </Toolbar>
@@ -241,13 +224,23 @@ class projectList extends React.Component {
                 </nav>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    <IconButton onClick={this.handleToProjectRegister.bind(this)}>
-              <AddIcon />Create Project
-            </IconButton>
-                    <Paper >
+                    <div className={classes.searchForm}>
+                                <form onSubmit={handleSubmit(this.submit.bind(this))}>
+                                    <SearchIcon style={{ fontSize: 70 }} />
+                                    <Field
+                                        component={renderTextField}
+                                        name='title'
+                                        id='title'
+                                        variant='outlined'
+                                        label='プロジェクト名で検索...'
+                                        style={{ width: 600}}
+                                    />
+                                </form>
+                                </div>
+                                <Button color="default" className={classes.createButton} variant="contained" onClick={this.handleToProjectRegister.bind(this)} >Create Project</Button>
                         {
                             this.props.projectList.map((project) =>
-                                <Card className={classes.card} key={project.id}>
+                                <Card className={classes.project} key={project.id}>
                                         <CardActionArea onClick={this.handleToTopicDetail.bind(this, project.id)}>
                                         <Typography className={classes.projectTitle} gutterBottom variant='h6' component='h2' >
                                             {project.title}
@@ -257,6 +250,8 @@ class projectList extends React.Component {
                                         </Typography>
                                         <Typography variant='body2' color='textSecondary' component='p' className={classes.metaInfo}>
                                             CREATEDDATE:{project.createdDate}
+                                            </Typography>
+                                            <Typography>
                                             <PeopleAltIcon fontSize='small' />
                                             {project.currentUser}人参加中
                                             </Typography>
@@ -264,19 +259,17 @@ class projectList extends React.Component {
                                 </Card>
                             )
                         }
-                    </Paper>
                 </main>
             </div>
         )
     }
 }
 
-projectList = reduxForm({
+ProjectList = reduxForm({
     form: 'ProjectList'
-})(projectList)
+})(ProjectList)
 
 function mapStateToProps(store) {
-    console.log(store);
     return {
         projectList: store.projectInfo.userInfo.projectList,
         messageList: store.projectInfo.userInfo.messageList,
@@ -296,12 +289,14 @@ function mapDispatchToProps(dispatch) {
         searchProjectAction(userId, title) {
             dispatch(searchProjectAction(userId, title));
         },
-
         confirmInvitationAction(messageInfo) {
             dispatch(confirmInvitationAction(messageInfo));
+        },
+        logoutAction() {
+            dispatch(logoutAction());
         }
     }
 }
 
 
-export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(projectList)));
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectList)));

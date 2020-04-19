@@ -98,11 +98,6 @@ class Signin extends React.Component {
                     <Link component={RouterLink} to="/signup" variant="body2">
                       ユーザー登録がまだの方はこちら
                     </Link>
-                    <Grid item>
-                    <Link component={RouterLink} to="/reset/email" variant="body2">
-                      パスワードをお忘れの方はこちら
-                    </Link>
-                    </Grid>
                   </Grid>
           </Grid>
       </div>
@@ -115,10 +110,6 @@ Signin = reduxForm({
   form: 'signin'
 })(Signin)
 
-function mapStateToProps(store){
-  console.log(store);
-}
-
 function mapDispatchToProps(dispatch) {
   return {
     signinAction(form) {
@@ -127,4 +118,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(Signin)));
+export default withStyles(styles)(withRouter(connect(null, mapDispatchToProps)(Signin)));

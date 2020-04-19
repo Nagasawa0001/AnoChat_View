@@ -223,7 +223,6 @@ ProjectRegister = reduxForm({
 })(ProjectRegister)
 
 function mapStateToProps(store) {
-  console.log(store);
   return {
       userId: store.userInfo.profile.id,
       loggedIn: store.userInfo.loggedIn

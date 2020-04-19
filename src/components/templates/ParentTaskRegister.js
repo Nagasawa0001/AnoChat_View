@@ -6,7 +6,6 @@ import { createTaskAction } from '../../modules/Register';
 import { connect } from 'react-redux';
 
 
-import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -88,6 +87,7 @@ class ParentTaskRegister extends React.Component {
 
   componentDidMount() {
     if (!this.props.loggedIn) {
+      document.cookie = "JSESSIONID=; expires=0";
       this.props.history.push('/signin');
     }
   }
@@ -118,21 +118,6 @@ class ParentTaskRegister extends React.Component {
             <Typography variant="h6" noWrap>
                             Parent Task Register
             </Typography>
-            <SearchIcon />
-            <div className={classes.search}>
-                                <form onSubmit=''>
-                                    <Field
-                                        placeholder='トピック名で検索...'
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        component={renderTextField}
-                                        name='title'
-                                        id='title'
-                                    />
-                                </form>
-                            </div>
                             <IconButton
                                     edge='end'
                                     aria-label='account of current user'

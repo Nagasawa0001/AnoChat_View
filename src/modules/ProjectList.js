@@ -97,9 +97,7 @@ const requestProjectList = (userId) => axios.get('http://localhost:8080/project/
     })
 
 function* getProjectList(context, action) {
-    console.log(action);
     const { infoList } = yield call(requestProjectList, action.userId);
-    console.log(infoList);
     if (infoList) {
         yield put({ type: PROJECTLIST_GET_SUCCESS, infoList});
     } else {
@@ -126,12 +124,10 @@ const requestSearchProject = (userId, title) => axios.get('http://localhost:8080
     })
 
 function* searchProject(context, action) {
-    console.log(action);
     if(!action.form.title) {
         yield put({ type: PROJECTLIST_GET_REQUEST, userId: action.form.userId });
     } else {
         const { infoList, error } = yield call(requestSearchProject, action.form.userId, action.form.title);
-        console.log(infoList);
         if (error) {
             yield put({ type: SEARCH_PROJECT_FAILURE, error: '予期せぬエラーが発生しました。開発者に連絡してください' });   
         } else {
@@ -164,7 +160,6 @@ const requestConfirmInvitation = (messageInfo) => axios.patch('http://localhost:
 function* confirmInvitation(context, action) {
 
     const { res, error } = yield call(requestConfirmInvitation, action.messageInfo);
-    console.log(res);
     if(res.status === 200) {
         yield put({ type: PROJECTLIST_GET_REQUEST });
     } else if(error) {

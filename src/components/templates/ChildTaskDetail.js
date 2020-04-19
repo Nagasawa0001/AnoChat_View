@@ -1,18 +1,12 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Field, reduxForm } from 'redux-form'
-import renderTextField from '../atoms/TextField';
+import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux';
 import { updateChildTaskStatusAction } from '../../modules/ChildTaskDetail';
 
 import ViewListIcon from '@material-ui/icons/ViewList';
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import WorkIcon from '@material-ui/icons/Work';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -20,15 +14,11 @@ import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
@@ -96,17 +86,13 @@ class ChildTaskDetail extends React.Component {
 
   componentDidMount() {
     if (!this.props.loggedIn) {
+      document.cookie = "JSESSIONID=; expires=0";
       this.props.history.push('/signin');
     }
   }
 
-  handleToTaskRegister() {
-    this.props.history.push('/create/task/child');
-  }
-
   updateChildTaskStatus(e) {
     this.props.updateChildTaskStatusAction(this.props.childTask.id, e.currentTarget.value);
-    console.log('updateParentTaskStatus');
   }
 
   render() {
@@ -127,31 +113,6 @@ class ChildTaskDetail extends React.Component {
             <Typography variant="h6" noWrap>
                             CHILD TASK
             </Typography>
-            <SearchIcon />
-            <div className={classes.search}>
-                                <form onSubmit=''>
-                                    <Field
-                                        placeholder='トピック名で検索...'
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        component={renderTextField}
-                                        name='title'
-                                        id='title'
-                                    />
-                                </form>
-                            </div>
-                            <IconButton
-                                    edge='end'
-                                    aria-label='account of current user'
-                                    aria-controls=''
-                                    aria-haspopup='true'
-                                    onClick=''
-                                    color='inherit'
-                                >
-                                    <AccountCircle style={{ fontSize: 30 }}/>
-                                </IconButton>
           </Toolbar>
         </AppBar>
         <nav className={classes.drawer} aria-label="mailbox folders">
@@ -167,22 +128,6 @@ class ChildTaskDetail extends React.Component {
               <div className={classes.toolbar} />
               <Divider />
               <List>
-                <ListItem button>
-                  <ListItemIcon><PeopleAltIcon /></ListItemIcon>
-                  <ListItemText primary='Member List' />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon><WorkIcon /></ListItemIcon>
-                  <ListItemText primary='Project List' />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                  <ListItemText primary='ParentTask List' />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                  <ListItemText primary='ChildTask List' />
-                </ListItem>
               </List>
 
             </Drawer>
@@ -207,13 +152,10 @@ class ChildTaskDetail extends React.Component {
           <Button color="primary" variant="outlined" value='1' onClick={this.updateChildTaskStatus.bind(this)}>Done</Button>
           <Button color="secondary" variant="outlined" value='2' onClick={this.updateChildTaskStatus.bind(this)}>Delete</Button>
           <Button color="default" variant="outlined" value='3' onClick={this.updateChildTaskStatus.bind(this)}>Cancel</Button>
+          <Typography>子タスク詳細</Typography>
             <Typography>{this.props.childTask.title}</Typography>
             <Typography>{this.props.childTask.content}</Typography>
-            <Typography>コメント数：**</Typography>
           </Paper>
-          <IconButton onClick={this.handleToTaskRegister.bind(this)}>
-            <AddIcon />Create Task
-          </IconButton>
           {
                 this.props.taskCommentList.map((taskComment) =>
                   <Paper className={classes.card} key={taskComment.id}>
@@ -238,7 +180,6 @@ ChildTaskDetail = reduxForm({
 
 
 function mapStateToProps(store) {
-  console.log(store.childTask);
   return {
     childTask: store.userInfo.loggedIn ? store.childTask.childTask : {},
     taskCommentList: store.userInfo.loggedIn ? store.childTask.taskCommentList : [],

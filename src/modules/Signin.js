@@ -41,12 +41,10 @@ export function signinReducer(state = initialState, action) {
 // 【Middleware】////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const requestSignup = (form) => axios.post('http://localhost:8080/signin', form)
     .then((res) => {
-        console.log(res);
         const userInfo = res.data;
         return { userInfo }
     })
     .catch((error) => {
-        console.log('error : ' + error);
         return { error }
     })
 
@@ -55,7 +53,6 @@ function* signin(context, action) {
     form.append('email', action.form.email);
     form.append('password', action.form.password);
     const { userInfo, error } = yield call(requestSignup, form);
-    console.log(userInfo);
     if(userInfo) {
         document.cookie = 'JSESSIONID=' + userInfo.jsessionId;
         yield put ({ type: SIGNIN_SUCCESS, userInfo});

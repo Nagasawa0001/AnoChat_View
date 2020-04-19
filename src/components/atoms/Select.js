@@ -3,7 +3,6 @@ import NativeSelect from '@material-ui/core/NativeSelect';
 
 
 const renderSelect = (props) => {
-    console.log(props);
     const { name, id, input, values } = props;
     return (
         <NativeSelect

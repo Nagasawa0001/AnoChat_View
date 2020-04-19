@@ -1,7 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Field, reduxForm } from 'redux-form'
-import renderTextField from '../atoms/TextField';
+import { reduxForm } from 'redux-form'
 import { getChildTaskDetailAction } from '../../modules/ChildTaskDetail';
 import { connect } from 'react-redux';
 import { switchChildTaskAction, updateParentTaskStatusAction } from '../../modules/ParentTaskDetail';
@@ -9,12 +8,8 @@ import { switchChildTaskAction, updateParentTaskStatusAction } from '../../modul
 
 import Button from '@material-ui/core/Button';
 import ViewListIcon from '@material-ui/icons/ViewList';
-import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import WorkIcon from '@material-ui/icons/Work';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,21 +17,18 @@ import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import BlockIcon from '@material-ui/icons/Block';
+
 
 
 const drawerWidth = 240;
@@ -87,6 +79,11 @@ const styles = theme => ({
         width: 'auto',
     },
 },
+card: {
+  margin: 20,
+  width: 700,
+  height: 120
+}
 });
 
 class ParentTaskDetail extends React.Component {
@@ -97,6 +94,7 @@ class ParentTaskDetail extends React.Component {
 
   componentDidMount() {
     if (!this.props.loggedIn) {
+      document.cookie = "JSESSIONID=; expires=0";
       this.props.history.push('/signin');
     }
   }
@@ -106,17 +104,11 @@ class ParentTaskDetail extends React.Component {
   }
 
   updateParentTaskStatus(e) {
-    console.log(e.currentTarget.value);
     this.props.updateParentTaskStatusAction(this.props.parentTask.id, e.currentTarget.value);
   }
 
   switchChildTaskList(status) {
-    console.log('switchChildTaskList');
     this.props.switchChildTaskAction(this.props.parentTask.id, status);
-  }
-
-  handleToParentTaskRegister() {
-    this.props.history.push('/create/task/parent');
   }
 
   render() {
@@ -137,21 +129,6 @@ class ParentTaskDetail extends React.Component {
             <Typography variant="h6" noWrap>
                             PARENT TASK
             </Typography>
-            <SearchIcon />
-            <div className={classes.search}>
-                                <form onSubmit=''>
-                                    <Field
-                                        placeholder='トピック名で検索...'
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        component={renderTextField}
-                                        name='title'
-                                        id='title'
-                                    />
-                                </form>
-                            </div>
                             <IconButton
                                     edge='end'
                                     aria-label='account of current user'
@@ -177,22 +154,6 @@ class ParentTaskDetail extends React.Component {
               <div className={classes.toolbar} />
               <Divider />
               <List>
-                <ListItem button>
-                  <ListItemIcon><PeopleAltIcon /></ListItemIcon>
-                  <ListItemText primary='Member List' />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon><WorkIcon /></ListItemIcon>
-                  <ListItemText primary='Project List' />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                  <ListItemText primary='ParentTask List' />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon><AssignmentIcon /></ListItemIcon>
-                  <ListItemText primary='ChildTask List' />
-                </ListItem>
               </List>
 
             </Drawer>
@@ -200,18 +161,14 @@ class ParentTaskDetail extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Paper >
+          <Paper className={classes.card}>
           <Button color="primary" variant="outlined" value='1' onClick={this.updateParentTaskStatus.bind(this)}>Done：</Button>
           <Button color="secondary" variant="outlined" value='2' onClick={this.updateParentTaskStatus.bind(this)}>Delete</Button>
           <Button color="default" variant="outlined" value='3' onClick={this.updateParentTaskStatus.bind(this)}>Cancel</Button>
+          <Typography>親タスク詳細</Typography>
             <Typography>{this.props.parentTask.title}</Typography>
             <Typography>{this.props.parentTask.content}</Typography>
-            <Typography>子タスク　未完了： </Typography>
-            <Typography>進捗率(%) + 進捗バー</Typography>
           </Paper>
-          <IconButton onClick={this.handleToParentTaskRegister.bind(this)}>
-            <AddIcon />Create Task
-          </IconButton>
           <BottomNavigation
       value={this.state.status}
       onChange={(event, status) => {
@@ -219,7 +176,7 @@ class ParentTaskDetail extends React.Component {
         this.setState({status: status})
       }}
       showLabels
-      className={classes.aaa}
+      className={classes.card}
     >
       <BottomNavigationAction label="All" icon={<ViewListIcon />} />
       <BottomNavigationAction label="Done" icon={<DoneOutlineIcon />} />
@@ -255,7 +212,6 @@ ParentTaskDetail = reduxForm({
 })(ParentTaskDetail)
 
 function mapStateToProps(store) {
-  console.log(store.parentTask);
   return {
     parentTask: store.parentTask.parentTask,
     childTaskList: store.parentTask.childTaskList,

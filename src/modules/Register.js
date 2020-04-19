@@ -142,7 +142,6 @@ const requestCreateProject = (form) => axios.post('http://localhost:8080/project
 
 function* createProjectTask(context, action){
    const { result, error } = yield call(requestCreateProject, action.form);
-console.log(result);
    if(result.status === 201) {
        yield call(context.history.push, '/projects')
    } else {

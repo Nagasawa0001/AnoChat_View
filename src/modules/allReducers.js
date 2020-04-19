@@ -8,6 +8,7 @@ import { signinReducer } from './Signin';
 import { parentTaskDetailReducer } from './ParentTaskDetail';
 import { childTaskDetailReducer } from './ChildTaskDetail';
 import { registerReducer } from './Register';
+import { logoutReducer } from './Auth';
 
 export default combineReducers({
     projectInfo: projectListReducer,
@@ -18,5 +19,6 @@ export default combineReducers({
     userInfo: signinReducer,
     parentTask: parentTaskDetailReducer,
     childTask: childTaskDetailReducer,
-    register: registerReducer
+    register: registerReducer,
+    logout: logoutReducer
 });

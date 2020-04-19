@@ -50,7 +50,6 @@ class SignupTemp extends React.Component {
     render() {
         const { classes } = this.props;
         const { handleSubmit } = this.props;
-        console.log(this.props);
         return (
             <Container component="main" maxWidth="xs">
               {
@@ -119,11 +118,6 @@ class SignupTemp extends React.Component {
                     <Link component={RouterLink} to="/signin" variant="body2">
                       ユーザー登録済みの方はこちら
                     </Link>
-                    <Grid item>
-                    <Link href="#" variant="body2">
-                      パスワードをお忘れの方はこちら
-                    </Link>
-                    </Grid>
                   </Grid>
                 </Grid> 
               </form>

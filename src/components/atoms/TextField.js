@@ -3,7 +3,7 @@ import TextField from '@material-ui/core/TextField';
 
 const renderTextField = (props) => {
     console.log(props);
-    const { input, variant, name, label, type, id, autoComplete, required, fullWidth } = props;
+    const { input, variant, name, label, type, id, autoComplete, required, fullWidth, style } = props;
     return (
         <TextField
         {...input} 
@@ -15,6 +15,7 @@ const renderTextField = (props) => {
         autoComplete={autoComplete}
         required={required}
         fullWidth={fullWidth}
+        style={style}
         />
     );
 }
