@@ -39,19 +39,15 @@ export function signupReducer(state = initialState, action) {
 // 【Middleware】////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const requestSignup = (form) => axios.post('http://localhost:8080/users/validate/' + form.signupToken)
     .then((res) => {
-        console.log(res);
         const result = res.data;
         return { result }
     })
     .catch((error) => {
-        console.log('error : ' + error);
         return { error }
     })
 
 function* signup(context, action) {
-    console.log(action);
     const { result, error } = yield call(requestSignup, action.form);
-    console.log('result: ' + result);
     if(result) {
         yield put ({ type: SIGNUP_SUCCESS});
         yield call (context.history.push('/signin'));

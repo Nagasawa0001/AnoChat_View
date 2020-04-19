@@ -2,8 +2,11 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { Field, reduxForm } from 'redux-form'
 import renderTextField from '../atoms/TextField';
+import { connect } from 'react-redux';
+import { createProjectAction } from '../../modules/Register';
 
-import SearchIcon from '@material-ui/icons/Search';
+
+
 import { fade } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import AssignmentIcon from '@material-ui/icons/Assignment';
@@ -23,10 +26,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import CardActionArea from '@material-ui/core/CardActionArea';
-
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import Container from '@material-ui/core/Container';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const drawerWidth = 240;
 
@@ -79,15 +84,19 @@ const styles = theme => ({
 });
 
 class ProjectRegister extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mobileOpen: false
+  componentDidMount() {
+    if (!this.props.loggedIn) {
+      this.props.history.push('/signin');
     }
   }
 
+  submit(form, dispatch) {
+    dispatch(createProjectAction(form));
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, handleSubmit } = this.props;
+    this.props.change('userId', this.props.userId);
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -104,21 +113,6 @@ class ProjectRegister extends React.Component {
             <Typography variant="h6" noWrap>
                             PROJECT Register
             </Typography>
-            <SearchIcon />
-            <div className={classes.search}>
-                                <form onSubmit=''>
-                                    <Field
-                                        placeholder='トピック名で検索...'
-                                        classes={{
-                                            root: classes.inputRoot,
-                                            input: classes.inputInput,
-                                        }}
-                                        component={renderTextField}
-                                        name='title'
-                                        id='title'
-                                    />
-                                </form>
-                            </div>
                             <IconButton
                                     edge='end'
                                     aria-label='account of current user'
@@ -167,24 +161,57 @@ class ProjectRegister extends React.Component {
         </nav>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          <Paper >
-            <Typography>タイトル</Typography>
-            <Typography>説明文</Typography>
-            <Typography>参加人数</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
-            <Typography>進捗率(%) + 進捗バー</Typography>
-          </Paper>
-          <IconButton>
-            <AddIcon />Create Task
-          </IconButton>
-          <CardActionArea>
-          <Paper >
-            <Typography>親タスクタイトル</Typography>
-            <Typography>担当者</Typography>
-            <Typography>総親タスク数 + 未完了タスク数</Typography>
-            <Typography>完了期日</Typography>
-          </Paper>
-          </CardActionArea>
+          <Container component="main" maxWidth="xs">
+              {
+                this.props.processing ? (<CircularProgress color="secondary"/>) : ''
+              }
+            <CssBaseline />
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <AddCircleOutlineIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Create Project
+              </Typography>
+              <form onSubmit={handleSubmit(this.submit.bind(this))}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="title"
+                      label="title"
+                      name="title"
+                      autoComplete="title"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      variant="outlined"
+                      required
+                      fullWidth
+                      name="discription"
+                      label="discription"
+                      type="discription"
+                      id="discription"
+                      component={renderTextField}
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Sign Up
+                </Button>
+              </form>
+            </div>
+          </Container>
         </main>
       </div>
     )
@@ -195,5 +222,19 @@ ProjectRegister = reduxForm({
   form: 'ProjectRegister'
 })(ProjectRegister)
 
+function mapStateToProps(store) {
+  return {
+      userId: store.userInfo.profile.id,
+      loggedIn: store.userInfo.loggedIn
+  }
+}
 
-export default withStyles(styles)(withRouter(ProjectRegister));
+function mapDispatchToProps(dispatch) {
+  return {
+    createProjectAction(form) {
+          dispatch(createProjectAction(form));
+      }
+  }
+}
+
+export default withStyles(styles)(withRouter(connect(mapStateToProps, mapDispatchToProps)(ProjectRegister)));

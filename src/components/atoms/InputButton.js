@@ -2,7 +2,6 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
 const renderTextField = (props) => {
-    console.log(props);
     const { input, variant, name, label, type, id, autoComplete, required, fullWidth } = props;
     return (
         <TextField

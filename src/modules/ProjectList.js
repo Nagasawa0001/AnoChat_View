@@ -2,7 +2,6 @@
 import axios from 'axios';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import '../setting.js';
-import getJSESSION from '../common';
 
 
 // 【Action】////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,9 +97,7 @@ const requestProjectList = (userId) => axios.get('http://localhost:8080/project/
     })
 
 function* getProjectList(context, action) {
-
-    const { infoList } = yield call(requestProjectList, getJSESSION().userId);
-    console.log(infoList);
+    const { infoList } = yield call(requestProjectList, action.userId);
     if (infoList) {
         yield put({ type: PROJECTLIST_GET_SUCCESS, infoList});
     } else {
@@ -127,13 +124,15 @@ const requestSearchProject = (userId, title) => axios.get('http://localhost:8080
     })
 
 function* searchProject(context, action) {
-
-    const { infoList, error } = yield call(requestSearchProject, action.form.userId, action.form.title);
-    console.log(infoList);
-    if (error) {
-        yield put({ type: SEARCH_PROJECT_FAILURE, error: '予期せぬエラーが発生しました。開発者に連絡してください' });   
+    if(!action.form.title) {
+        yield put({ type: PROJECTLIST_GET_REQUEST, userId: action.form.userId });
     } else {
-        yield put({ type: SEARCH_PROJECT_SUCCESS, infoList});
+        const { infoList, error } = yield call(requestSearchProject, action.form.userId, action.form.title);
+        if (error) {
+            yield put({ type: SEARCH_PROJECT_FAILURE, error: '予期せぬエラーが発生しました。開発者に連絡してください' });   
+        } else {
+            yield put({ type: SEARCH_PROJECT_SUCCESS, infoList});
+        }
     }
 }
 
